@@ -15,7 +15,7 @@ class Contect_Screen extends StatelessWidget {
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+                icon: const Icon(Icons.arrow_back_ios_new, color:Colors.black),
                 onPressed: () {
                   Get.back();
                 },
@@ -44,7 +44,7 @@ class Contect_Screen extends StatelessWidget {
                     decoration: const BoxDecoration(
                         border: Border(
                       bottom: BorderSide(
-                        color: Colors.purple,
+                        color: purple,
                         width: 3,
                       ),
                     )),
@@ -77,7 +77,7 @@ class Contect_Screen extends StatelessWidget {
                 const Icon(
                   Icons.home_outlined,
                   size: 40,
-                  color: Colors.purple,
+                  color:purple,
                 ),
                 SizedBox(
                   width: screenwidth(context, dividedby: 10),
@@ -99,7 +99,7 @@ class Contect_Screen extends StatelessWidget {
                 const Icon(
                   Icons.phone_android_sharp,
                   size: 40,
-                  color: Colors.purple,
+                  color:purple,
                 ),
                 SizedBox(
                   width: screenwidth(context, dividedby: 10),
@@ -121,7 +121,7 @@ class Contect_Screen extends StatelessWidget {
                 const Icon(
                   Icons.email_outlined,
                   size: 40,
-                  color: Colors.purple,
+                  color:purple,
                 ),
                 SizedBox(
                   width: screenwidth(context, dividedby: 10),

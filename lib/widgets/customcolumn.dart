@@ -37,18 +37,19 @@ class CustomColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 0, 0),
+        padding: const EdgeInsets.fromLTRB(8, 5, 0, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               name,
-              style: const TextStyle(color: Colors.purple),
+              style: const TextStyle(color: purple),
             ),
+            SizedBox(height: 3,),
             Text(
               sname,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400),
             )
           ],
         ),

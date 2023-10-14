@@ -51,3 +51,8 @@ class ProductControllerwithQr extends GetxController {
     });
   }
 }
+
+class qrexample extends GetxController{
+  TextEditingController qrproduct = TextEditingController();
+
+}

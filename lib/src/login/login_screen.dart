@@ -1,4 +1,7 @@
 import 'package:inventory/inventory.dart';
+import 'package:inventory/src/storecode/store_code_screen.dart';
+
+import '../../widgets/customforcreate.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -24,6 +27,8 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Card(
+                shape:boarderad,
+
                 elevation: 5,
                 margin: EdgeInsets.zero,
                 child: Padding(
@@ -31,49 +36,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Sign',
-                            style: TextStyle(
-                                fontSize: screenheight(context, dividedby: 32),
-                                fontFamily: 'gilroy.bold'),
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(
-                                border: Border(
-                              bottom: BorderSide(
-                                color: Colors.purple,
-                                width: 3,
-                              ),
-                            )),
-                            child: Text(
-                              ' In',
-                              style: TextStyle(
-                                fontSize: screenheight(context, dividedby: 32),
-                                fontFamily: 'gilroy.bold',
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Sign In',
+                        style: TextStyle(
+                            fontSize: screenheight(context, dividedby: 32),
+                            fontFamily: 'gilroy.bold'),
                       ),
-SizedBox(height: 45,),
-                      CommonTextField(
+                    SizedBox(height: 20,),
+                      CommonTextFieldCrete(
+                        textname: "Email",
                         controller: loginController.email,
                         hintText: 'Enter Email',
                         isPasswordField: false,
-                        prefixicon: const Icon(Icons.person, color: Colors.purple),
+                        prefixicon: const Icon(Icons.person, color: purple),
                       ),
-                      SizedBox(
-                        height: screenheight(context, dividedby: 40),
-                      ),
-                      CommonTextField(
+                      CommonTextFieldCrete(
+                        textname: "password",
                         controller: loginController.password,
                         hintText: 'Password',
                         prefixicon: const Icon(
                           Icons.lock,
-                          color: Colors.purple,
+                          color: purple,
                         ),
                       ),
                       SizedBox(

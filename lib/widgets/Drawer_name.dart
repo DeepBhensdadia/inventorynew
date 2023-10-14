@@ -8,8 +8,8 @@ class Drawer_Name extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Login loginDetailsFromLocalData =
-        loginFromJson(SharedPref.get(prefKey: PrefKey.loginDetails)!);
+    // Login loginDetailsFromLocalData =
+    //     loginFromJson(SharedPref.get(prefKey: PrefKey.loginDetails)!);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -22,7 +22,7 @@ class Drawer_Name extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Expanded(
                 child: Text(
-                  loginDetailsFromLocalData.data!.name.toString(),
+                 "Ivapp",
                   style: TextStyle(
                       fontSize: screenheight(context, dividedby: 40),
                       fontWeight: FontWeight.w500,

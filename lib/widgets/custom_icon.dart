@@ -22,7 +22,7 @@ class _CustomIconButtonState extends State<CustomIconButton> {
       splashRadius: 20.0,
       icon: Icon(
         isButtonPressed ? Icons.visibility : Icons.visibility_off,
-        color: Colors.purple,
+        color:purple,
       ),
     );
   }

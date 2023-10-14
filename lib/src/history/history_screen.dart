@@ -9,7 +9,7 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dynamic homeController = "";
+    // final dynamic homeController = "";
 
     return Scaffold(
       appBar: AppBar(
@@ -31,14 +31,10 @@ class HistoryScreen extends StatelessWidget {
               fontSize: screenheight(context, dividedby: 32)),
         ),
       ),
-      body: homeController.historyqat.result == null
-          ? Center(
-              child: Text('No history'),
-            )
-          : ListView.builder(
-              itemCount: homeController.historyqat.result.length,
+      body:  ListView.builder(
+              itemCount: 3,
               itemBuilder: (context, index) {
-                dynamic result = homeController.historyqat.result[index];
+                // dynamic result = homeController.historyqat.result[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Card(
@@ -50,45 +46,45 @@ class HistoryScreen extends StatelessWidget {
                         children: [
                           CustomColumnRow(
                             tag: 'Tag',
-                            name: result.tagNumber,
+                            name: "12345",
                             tag2: 'Asset',
-                            sname: result.asset,
+                            sname: "Oiling Device",
                           ),
                           const SizedBox(
                             height: 5,
                           ),
                           CustomColumnRow(
                             tag: 'Actual Quantity',
-                            name: result.qty,
+                            name: "100",
                             tag2: 'Available Quantity',
-                            sname: result.availableQty,
+                            sname: "90",
                           ),
                           const SizedBox(
                             height: 5,
                           ),
                           CustomColumnRow(
                             tag: 'Category',
-                            name: result.category,
+                            name: "Oil Dealing",
                             tag2: 'UOM',
-                            sname: result.uom,
+                            sname: "NA",
                           ),
                           const SizedBox(
                             height: 5,
                           ),
                           CustomColumnRow(
                             tag: 'Location',
-                            name: result.location,
+                            name: "Store",
                             tag2: 'Sub location',
-                            sname: result.subLocation,
+                            sname: "Store"
                           ),
                           const SizedBox(
                             height: 5,
                           ),
                           CustomColumnRow(
                             tag: 'Item Code',
-                            name: result.date,
+                            name: "B123456789",
                             tag2: 'Main Category',
-                            sname: result.mainCategory,
+                            sname: "5",
                           ),
                           const SizedBox(
                             height: 5,

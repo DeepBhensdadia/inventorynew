@@ -1,7 +1,8 @@
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:inventory/getxcontroller/productcontroller.dart';
 import 'package:inventory/inventory.dart';
-
+import 'package:inventory/widgets/customforcreate.dart';
 
 class AssetScreen extends StatefulWidget {
   const AssetScreen({
@@ -13,253 +14,360 @@ class AssetScreen extends StatefulWidget {
 }
 
 class _AssetScreenState extends State<AssetScreen> {
-  ProductController homeController = Get.put(ProductController());
+  Future<void> pickcoverimagecamera() async {
+    XFile? Selectedimage = await ImagePicker().pickImage(
+      imageQuality: 25,
+      source: ImageSource.camera,
+    );
+
+    if (Selectedimage != null) {
+      File convertedFile = File(Selectedimage.path);
+      setState(() {
+        profilepic = convertedFile;
+      });
+
+      // Fluttertoast.showToast(msg: "Image Selected");
+    } else {
+      // Fluttertoast.showToast(msg: "Image Not Selected");
+    }
+  }
+
+  Future<void> pickcoverimagegallary() async {
+    XFile? Selectedimage = await ImagePicker().pickImage(
+      imageQuality: 25,
+      source: ImageSource.gallery,
+    );
+
+    if (Selectedimage != null) {
+      File convertedFile = File(Selectedimage.path);
+      setState(() {
+        profilepic = convertedFile;
+      });
+
+      // Fluttertoast.showToast(msg: "Image Selected");
+    } else {
+      // Fluttertoast.showToast(msg: "Image Not Selected");
+    }
+  }
+
+  // ProductController homeController = Get.put(ProductController());
   File? profilepic;
   // final String data;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        // resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Column(
-            children: [
-              SizedBox(height: screenheight(context, dividedby: 17)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new,
-                        color: Colors.black),
-                    onPressed: () {
-                      Get.back();
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // SizedBox(height: screenheight(context, dividedby: 4)),
-                      Text(
-                        'Assets De',
-                        style: TextStyle(
-                            fontSize: screenheight(context, dividedby: 35),
-                            fontFamily: 'gilroy.bold'),
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                            border: Border(
-                          bottom: BorderSide(
-                            color: Colors.purple,
-                            width: 3,
-                          ),
-                        )),
-                        child: Text(
-                          'tails',
+    return SafeArea(
+      child: Scaffold(
+          // resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            actions: const [],
+            iconTheme: const IconThemeData(color: white, size: 30),
+            backgroundColor: purple,
+            elevation: 5,
+            toolbarHeight: 60,
+            title: const Text(
+              "Assets Details",
+              style: TextStyle(
+                  fontSize: 22,
+                  // fontWeight: FontWeight.w600,
+                  color: white),
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Card(
+                  margin: EdgeInsets.all(20),
+                  shape: boarderad,
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: AssetImage(
+                                        "assets/images/iphone_11_PNG42.png",
+                                      ))),
+                              height: 80,
+                              width: 80,
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Iphone 14 pro",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500)),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text("Item Code : I1234567",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: subtitle,
+                                        fontWeight: FontWeight.w500)),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Category : Mobile",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: subtitle,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Location: Store",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: subtitle,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          color: Colors.grey,
+                          height: 50,
+                        ),
+                        Text(
+                          "Available Quantity : 120",
                           style: TextStyle(
-                            fontSize: screenheight(context, dividedby: 37),
-                            fontFamily: 'gilroy.bold',
+                              fontSize: 20,color: lablecolor, fontWeight: FontWeight.w500),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  shape: boarderad,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        CommonTextFieldCrete(
+                          textname: "Enter Updated Quantity",
+                          hintText: 'Enter Updated Quantity',
+                          isPasswordField: false,
+                        ),
+                        CommonTextFieldCrete(
+                          textname: "Enter Remark",
+                          hintText: 'Enter remark',
+                          isPasswordField: false,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Upload Photo",
+                                style: TextStyle(
+                                    // fontFamily: 'gilroy',
+                                    fontSize:
+                                        screenheight(context, dividedby: 50),
+                                    color: lablecolor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              ElevatedButton(
+                                  style: ButtonStyle(
+                                      padding:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) => EdgeInsets.zero),
+                                      backgroundColor:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) => purple)),
+                                  onPressed: () {
+                                    pickgallarycamera();
+                                  },
+                                  child: Icon(Icons.camera_alt_outlined))
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.watch_later_outlined,
-                      color: Colors.purple,
-                      size: 30,
+                        profilepic != null
+                            ? Row(
+                                children: [
+                                  Card(
+                                      elevation: 3,
+                                      child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: FileImage(profilepic!))),
+                                      )),
+                                  IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          profilepic = null;
+                                        });
+                                      },
+                                      icon: Icon(Icons.clear))
+                                ],
+                              )
+                            : SizedBox.shrink(),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        CustomButton(
+                            name: 'Update',
+                            onPressed: () async {
+                              // await assetController.updatedata();
+                            }),
+                        SizedBox(
+                          height: 8,
+                        ),
+                      ],
                     ),
-                    onPressed: () async {
-                      context.loaderOverlay.show();
-
-                      // await homeController.Historyqat();
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Card(
-                // borderOnForeground: false,
-                elevation: 3,
-                child: SizedBox(
-                    // color: Colors.black26,
-                    // height: 300,
-                    child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Column(
-                    children: [
-                      CustomColumnRow(
-                        tag: 'Tag',
-                        name: homeController.assetDetails.data?.first.id.toString() ?? "",
-                        tag2: 'Asset',
-                        sname: homeController.assetDetails.data?.first.asset.toString() ?? "",
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomColumnRow(
-                        tag: 'Actual Quantity',
-                        name: homeController.assetDetails.data?.first.quantity.toString() ?? "",
-                        tag2: 'Available Quantity',
-                        sname: homeController.assetDetails.data?.first.availableQuantity.toString() ?? "",
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomColumnRow(
-                        tag: 'Category',
-                        name: homeController.assetDetails.data?.first.category.toString() ?? "",
-                        tag2: 'UOM',
-                        sname: homeController.assetDetails.data?.first.uom.toString() ?? "",
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomColumnRow(
-                        tag: 'Location',
-                        name: homeController.assetDetails.data?.first.location.toString() ?? "",
-                        tag2: 'Sub location',
-                        sname: homeController.assetDetails.data?.first.subLocation.toString() ?? "",
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      CustomColumnRow(
-                        tag: 'Item Code',
-                        name: homeController.assetDetails.data?.first.itemCode.toString() ?? "",
-                        tag2: 'Main Category',
-                        sname: homeController.assetDetails.data?.first.mainCategory.toString() ?? "",
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                    ],
-                  ),
-                )),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  // controller: assetController.Upcontroller,
-                  decoration: InputDecoration(
-                    fillColor: Colors.purple,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    hintText: 'Enter Physical Quantity',
-                    hintStyle: TextStyle(
-                        color: Colors.grey,
-                        fontSize: screenheight(context, dividedby: 55)),
-                    border: const OutlineInputBorder(
-                        gapPadding: 0,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              ],
+            ),
+          )),
+    );
+  }
+
+  pickgallarycamera() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 195,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    // SizedBox(
-                    //   child: CustomButton(
-                    //       name: 'Image',
-                    //       onPressed: () async {
-                    //         Fluttertoast.showToast(msg: "In progress.");
-                    //         showModalBottomSheet(
-                    //           context: context,
-                    //           builder: (context) {
-                    //             return SizedBox(
-                    //               height: screenheight(context, dividedby: 4.5),
-                    //               child: Model_bottom_sheet(
-                    //                 tapGallary: () async {
-                    //                   XFile? Selectedimage = await ImagePicker()
-                    //                       .pickImage(
-                    //                           source: ImageSource.gallery);
-                    //
-                    //                   if (Selectedimage != null) {
-                    //                     File convertedFile =
-                    //                         File(Selectedimage.path);
-                    //                     setState(() {
-                    //                       profilepic = convertedFile;
-                    //                     });
-                    //                     Get.back();
-                    //                     Fluttertoast.showToast(
-                    //                         msg: "Image Selected");
-                    //                   } else {
-                    //                     Fluttertoast.showToast(
-                    //                         msg: "Image Not Selected");
-                    //                   }
-                    //                 },
-                    //                 pickCamera: () async {
-                    //                   XFile? Selectedimage = await ImagePicker()
-                    //                       .pickImage(
-                    //                           source: ImageSource.camera);
-                    //
-                    //                   if (Selectedimage != null) {
-                    //                     File convertedFile =
-                    //                         File(Selectedimage.path);
-                    //                     setState(() {
-                    //                       profilepic = convertedFile;
-                    //                     });
-                    //                     Get.back();
-                    //                     Fluttertoast.showToast(
-                    //                         msg: "Image Selected");
-                    //                   } else {
-                    //                     Fluttertoast.showToast(
-                    //                         msg: "Image Not Selected");
-                    //                   }
-                    //                 },
-                    //               ),
-                    //             );
-                    //           },
-                    //         );
-                    //       }),
-                    // ),
-                    // const SizedBox(width: 15),
-                    CustomButton(
-                        name: 'Update',
-                        onPressed: () async {
-                          // await assetController.updatedata();
-                        }),
+                    Text(
+                      "Change option".tr,
+                      style: TextStyle(
+                          fontFamily: 'SF Pro Display',
+                          fontSize: 19,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff909196).withOpacity(1)),
+                    ),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    backgroundImage:
-                        (profilepic != null) ? FileImage(profilepic!) : null,
-                    backgroundColor: (profilepic != null)
-                        ? Colors.grey
-                        : const Color(0xffFAFAFA),
-                    radius: 40,
+                SizedBox(
+                  height: 15,
+                ),
+                InkWell(
+                  onTap: () async {
+                    Get.back();
+                    pickcoverimagecamera();
+                  },
+                  child: Container(
+                    height: 40,
+                    child: Row(
+                      children: [
+                        Center(
+                            child: Icon(Icons.camera_alt,
+                                color: Color(0xff909196).withOpacity(1))),
+                        const SizedBox(
+                          width: 18,
+                        ),
+                        Center(
+                            child: Text("Camera".tr,
+                                style: TextStyle(
+                                    fontFamily: 'SF Pro Display',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black)))
+                      ],
+                    ),
                   ),
-                  profilepic != null
-                      ? IconButton(
-                          color: Colors.grey.shade500,
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            setState(() {
-                              profilepic = null;
-                            });
-                          },
-                        )
-                      : const SizedBox(),
-                ],
-              ),
-            ],
+                ),
+                InkWell(
+                  onTap: () async {
+                    Get.back();
+
+                    pickcoverimagegallary();
+                  },
+                  child: Container(
+                    height: 40,
+                    child: Row(
+                      children: [
+                        Center(
+                            child: Icon(Icons.image_rounded,
+                                color: Color(0xff909196).withOpacity(1))),
+                        SizedBox(
+                          width: 18,
+                        ),
+                        Center(
+                          child: Text(
+                            "Gallery".tr,
+                            style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 7,
+                ),
+                InkWell(
+                  onTap: () async {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 40,
+                    child: Row(
+                      children: [
+                        Center(
+                          child: Icon(
+                            Icons.cancel,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 18,
+                        ),
+                        Center(
+                          child: Text(
+                            "Close".tr,
+                            style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    ));
+        );
+      },
+    );
   }
 }
 // ${homeController.assetDetails?.result?.location}

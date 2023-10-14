@@ -21,13 +21,14 @@ class MyApp extends StatelessWidget {
       useDefaultLoading: false,
       overlayWidget: Center(
           child: LoadingAnimationWidget.fourRotatingDots(
-              color: Colors.purple, size: 80)),
+              color: purple, size: 80)),
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Inventory App',
         // getPages: getPages,
         // initialRoute: Routes.splash,
         theme: ThemeData(
+          scaffoldBackgroundColor: Colors.grey.shade200,
           primarySwatch: Colors.blue,
         ),
         home: const Splash_Screen(),

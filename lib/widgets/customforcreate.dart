@@ -8,14 +8,18 @@ class CommonTextFieldCrete extends StatefulWidget {
      this.controller,
      this.hintText,
      this.textname,
+     this.countertext,
     this.isPasswordField = true,
+    this.readonly = false,
      this.prefixicon,
   }) : super(key: key);
 
   final TextEditingController? controller;
   final String? hintText;
   final String? textname;
+  final String? countertext;
   final bool isPasswordField;
+  final bool readonly;
 
   @override
   State<CommonTextFieldCrete> createState() => _CommonTextFieldCreteState();
@@ -23,6 +27,8 @@ class CommonTextFieldCrete extends StatefulWidget {
 
 class _CommonTextFieldCreteState extends State<CommonTextFieldCrete> {
   bool isPasswordField = false;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +42,27 @@ class _CommonTextFieldCreteState extends State<CommonTextFieldCrete> {
             style: TextStyle(
               // fontFamily: 'gilroy',
                 fontSize: screenheight(context, dividedby: 55),
-                color: Colors.purple,fontWeight: FontWeight.w500),
+                color: lablecolor,fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 10,),
           Container(
+
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             decoration: BoxDecoration(
               // color: Colors.blueGrey.withOpacity(0.3),
-              border: Border.all(width: 1, color: Colors.black.withOpacity(0.5)),
-              borderRadius: BorderRadius.circular(5.0),
+              border: Border.all(width: 1, color: Colors.grey.withOpacity(0.8)),
+              borderRadius: BorderRadius.circular(6.0),
             ),
             child: TextField(
+              readOnly: widget.readonly,
               controller: widget.controller,
               obscureText: isPasswordField,
               decoration: InputDecoration(
-                fillColor: Colors.purple,
+                fillColor: purple,
                 contentPadding: EdgeInsets.symmetric(vertical: 15),
                 border: InputBorder.none,
                 hintText: widget.hintText,
+                // counterText: widget.countertext,
                 prefixIcon: widget.prefixicon,
                 suffixIcon: widget.isPasswordField
                     ? CustomIconButton(

@@ -16,7 +16,7 @@ class _CreateInventoryState extends State<CreateInventory> {
     return Scaffold(
       appBar: AppBar(
         actions: const [],
-        iconTheme: const IconThemeData(color: Colors.purple, size: 30),
+        iconTheme: const IconThemeData(color: purple, size: 30),
         backgroundColor: Colors.white,
         elevation: 0.5,
         toolbarHeight: 60,

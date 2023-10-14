@@ -53,6 +53,7 @@ class _DrawerStaffState extends State<DrawerStaff> {
         Drawer_Widget(
             name: 'History',
             onTap: () async {
+              Get.to(HistoryScreen());
               // context.loaderOverlay.show();
               // await homeController.Historyqat();
             }),

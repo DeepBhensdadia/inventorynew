@@ -28,9 +28,9 @@ class Radiobutton extends StatelessWidget {
             onChanged: onchanged,
             fillColor: MaterialStateProperty.resolveWith((Set states) {
               if (states.contains(MaterialState.disabled)) {
-                return Colors.purple.withOpacity(.32);
+                return purple.withOpacity(.32);
               }
-              return Colors.purple;
+              return purple;
             })),
         Text(
           name,

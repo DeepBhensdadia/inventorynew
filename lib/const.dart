@@ -18,7 +18,11 @@ class Url {
   static String companydashboard = '$url/company_dashboard';
 }
 
-const Color purple = Colors.purple;
+const Color purple = Color(0xffA84777);
+const Color lablecolor = Color(0xff4778A9);
+const Color greencolor = Color(0xff78A947);
+const Color subtitle = Colors.black45;
+const Color white = Colors.white;
 
 Login? saveUser() {
   Login? saveuser = SharedPref.get(prefKey: PrefKey.loginDetails) != null
@@ -33,3 +37,33 @@ Companydetails? comapnydetails() {
       : null;
   return saveuser;
 }
+
+List<Productsdetailsforest> data = [
+Productsdetailsforest(locationCode: "1001",locationName: "Warehouse"),
+Productsdetailsforest(locationCode: "1000",locationName: "Store"),
+];
+
+class Productsdetailsforest {
+  int? id;
+  int? companyId;
+  String locationCode;
+  String locationName;
+  int? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  Productsdetailsforest({
+    this.id,
+    this.companyId,
+   required this.locationCode,
+   required this.locationName,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+}
+
+final ShapeBorder boarderad =  RoundedRectangleBorder(
+borderRadius: BorderRadius.circular(8.0),
+);
