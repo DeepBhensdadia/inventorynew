@@ -9,6 +9,7 @@ class LocatioController extends GetxController {
   Location() async {
     await WebRepository().homepagedata(comapnydetails()?.data?.id.toString() ?? "1").then((value) {
       weblocation = value;
+      update();
       Get.off(const HomeScreen());
     }).onError((error, stackTrace) {
       print(error);

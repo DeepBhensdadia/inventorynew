@@ -1,28 +1,28 @@
 // To parse this JSON data, do
 //
-//     final productsdetails = productsdetailsFromJson(jsonString);
+//     final historyresponsemodel = historyresponsemodelFromJson(jsonString);
 
 import 'dart:convert';
 
-Productsdetails productsdetailsFromJson(String str) => Productsdetails.fromJson(json.decode(str));
+Historyresponsemodel historyresponsemodelFromJson(String str) => Historyresponsemodel.fromJson(json.decode(str));
 
-String productsdetailsToJson(Productsdetails data) => json.encode(data.toJson());
+String historyresponsemodelToJson(Historyresponsemodel data) => json.encode(data.toJson());
 
-class Productsdetails {
+class Historyresponsemodel {
   bool? success;
   String? message;
-  List<Product>? data;
+  List<HistoryProduct>? data;
 
-  Productsdetails({
+  Historyresponsemodel({
     this.success,
     this.message,
     this.data,
   });
 
-  factory Productsdetails.fromJson(Map<String, dynamic> json) => Productsdetails(
+  factory Historyresponsemodel.fromJson(Map<String, dynamic> json) => Historyresponsemodel(
     success: json["success"],
     message: json["message"],
-    data: List<Product>.from(json["data"].map((x) => Product.fromJson(x))),
+    data:json["data"] != null ? List<HistoryProduct>.from(json["data"].map((x) => HistoryProduct.fromJson(x))) : [],
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,9 +32,17 @@ class Productsdetails {
   };
 }
 
-class Product {
+class HistoryProduct {
   int? id;
+  int? productId;
+  int? oldQty;
+  int? newQty;
   int? userId;
+  String? comment;
+  String? photo;
+  String? condition;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   int? companyId;
   String? sheetNumber;
   String? productDate;
@@ -43,7 +51,6 @@ class Product {
   String? itemCode;
   String? productCode;
   String? asset;
-  String? photo;
   String? remark;
   String? mainCategory;
   String? category;
@@ -51,13 +58,18 @@ class Product {
   String? uom;
   String? availableQuantity;
   int? status;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  int? updateStatus;
 
-  Product({
+  HistoryProduct({
     this.id,
+    this.productId,
+    this.oldQty,
+    this.newQty,
     this.userId,
+    this.comment,
+    this.photo,
+    this.condition,
+    this.createdAt,
+    this.updatedAt,
     this.companyId,
     this.sheetNumber,
     this.productDate,
@@ -66,7 +78,6 @@ class Product {
     this.itemCode,
     this.productCode,
     this.asset,
-    this.photo,
     this.remark,
     this.mainCategory,
     this.category,
@@ -74,14 +85,19 @@ class Product {
     this.uom,
     this.availableQuantity,
     this.status,
-    this.createdAt,
-    this.updatedAt,
-    this.updateStatus,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory HistoryProduct.fromJson(Map<String, dynamic> json) => HistoryProduct(
     id: json["id"],
+    productId: json["product_id"],
+    oldQty: json["old_qty"],
+    newQty: json["new_qty"],
     userId: json["user_id"],
+    comment: json["comment"],
+    photo: json["photo"],
+    condition: json["condition"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
     companyId: json["company_id"],
     sheetNumber: json["sheet_number"],
     productDate: json["product_date"],
@@ -90,7 +106,6 @@ class Product {
     itemCode: json["item_code"],
     productCode: json["product_code"],
     asset: json["asset"],
-    photo: json["photo"],
     remark: json["remark"],
     mainCategory: json["main_category"],
     category: json["category"],
@@ -98,14 +113,19 @@ class Product {
     uom: json["uom"],
     availableQuantity: json["available_quantity"],
     status: json["status"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
-    updateStatus: json["update_status"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
+    "product_id": productId,
+    "old_qty": oldQty,
+    "new_qty": newQty,
     "user_id": userId,
+    "comment": comment,
+    "photo": photo,
+    "condition": condition,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
     "company_id": companyId,
     "sheet_number": sheetNumber,
     "product_date": productDate,
@@ -114,7 +134,6 @@ class Product {
     "item_code": itemCode,
     "product_code": productCode,
     "asset": asset,
-    "photo": photo,
     "remark": remark,
     "main_category": mainCategory,
     "category": category,
@@ -122,8 +141,5 @@ class Product {
     "uom": uom,
     "available_quantity": availableQuantity,
     "status": status,
-    "created_at": createdAt!.toIso8601String(),
-    "updated_at": updatedAt!.toIso8601String(),
-    "update_status": updateStatus,
   };
 }

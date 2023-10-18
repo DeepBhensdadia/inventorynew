@@ -10,27 +10,27 @@ class Splash_Screen extends StatefulWidget {
 }
 
 class _Splash_ScreenState extends State<Splash_Screen> {
-
   @override
   void initState() {
     checkInternet();
     super.initState();
   }
+
   LocatioController locationcontroll = Get.put(LocatioController());
   void checkInternet() async {
     // context.loaderOverlay.show();
     if (await InternetConnectionChecker().hasConnection) {
-      Future.delayed(const Duration(seconds: 2), () async {
+      Future.delayed(const Duration(seconds: 0), () async {
         if (SharedPref.get(prefKey: PrefKey.loginDetails) != null) {
           if (SharedPref.get(prefKey: PrefKey.companyDetails) != null) {
             // context.loaderOverlay.show();
             locationcontroll.Location();
-            context.loaderOverlay.hide();
+            // context.loaderOverlay.hide();
           } else {
             Get.off(const StoreCode());
-            context.loaderOverlay.hide();
+            // context.loaderOverlay.hide();
           }
-        }else{
+        } else {
           Get.off(const LoginScreen());
         }
       });
@@ -45,7 +45,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: Center(
         child: Image.asset('assets/images/logo.png'),
       ),

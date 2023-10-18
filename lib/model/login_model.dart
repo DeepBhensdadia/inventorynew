@@ -21,7 +21,7 @@ class Login {
 
   factory Login.fromJson(Map<String, dynamic> json) => Login(
     success: json["success"],
-    data: Data.fromJson(json["data"]),
+    data:json["data"] != null ?  Data.fromJson(json["data"]): Data(),
     message: json["message"],
   );
 

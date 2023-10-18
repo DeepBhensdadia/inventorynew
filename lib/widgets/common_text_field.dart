@@ -37,7 +37,7 @@ class _CommonTextFieldState extends State<CommonTextField> {
         obscureText: isPasswordField,
         decoration: InputDecoration(
           fillColor: purple,
-          contentPadding: EdgeInsets.symmetric(vertical: 15),
+          contentPadding: const EdgeInsets.symmetric(vertical: 15),
           border: InputBorder.none,
           hintText: widget.hintText,
           prefixIcon: widget.prefixicon,

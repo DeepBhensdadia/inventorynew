@@ -17,7 +17,6 @@ class ProductController extends GetxController {
         .then((value) {
      if(value.data!.isNotEmpty){
        assetDetails = value;
-       Get.context!.loaderOverlay.hide();
        print(jsonEncode(value));
        Get.to(const AssetScreen());
        Get.context!.loaderOverlay.hide();
@@ -26,6 +25,7 @@ class ProductController extends GetxController {
        Get.context!.loaderOverlay.hide();
      }
     }).onError((error, stackTrace) {
+      Get.context!.loaderOverlay.hide();
       print(error);
     });
   }
@@ -52,7 +52,3 @@ class ProductControllerwithQr extends GetxController {
   }
 }
 
-class qrexample extends GetxController{
-  TextEditingController qrproduct = TextEditingController();
-
-}

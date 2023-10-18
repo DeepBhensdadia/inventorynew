@@ -45,7 +45,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
         result = scanData;
         if (result != null) {
           print(result.toString());
-          controllerqrwork.detailsscreen(result.toString());
+          controllerqrwork.detailsscreen(result?.code.toString() ?? "");
           Get.back();
           controller.stopCamera();
         }

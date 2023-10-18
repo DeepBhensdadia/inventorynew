@@ -1,28 +1,28 @@
 // To parse this JSON data, do
 //
-//     final productsdetails = productsdetailsFromJson(jsonString);
+//     final createproducthistoryresponsemodel = createproducthistoryresponsemodelFromJson(jsonString);
 
 import 'dart:convert';
 
-Productsdetails productsdetailsFromJson(String str) => Productsdetails.fromJson(json.decode(str));
+Createproducthistoryresponsemodel createproducthistoryresponsemodelFromJson(String str) => Createproducthistoryresponsemodel.fromJson(json.decode(str));
 
-String productsdetailsToJson(Productsdetails data) => json.encode(data.toJson());
+String createproducthistoryresponsemodelToJson(Createproducthistoryresponsemodel data) => json.encode(data.toJson());
 
-class Productsdetails {
+class Createproducthistoryresponsemodel {
   bool? success;
   String? message;
-  List<Product>? data;
+  List<Datum>? data;
 
-  Productsdetails({
+  Createproducthistoryresponsemodel({
     this.success,
     this.message,
     this.data,
   });
 
-  factory Productsdetails.fromJson(Map<String, dynamic> json) => Productsdetails(
+  factory Createproducthistoryresponsemodel.fromJson(Map<String, dynamic> json) => Createproducthistoryresponsemodel(
     success: json["success"],
     message: json["message"],
-    data: List<Product>.from(json["data"].map((x) => Product.fromJson(x))),
+    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,7 +32,7 @@ class Productsdetails {
   };
 }
 
-class Product {
+class Datum {
   int? id;
   int? userId;
   int? companyId;
@@ -55,7 +55,7 @@ class Product {
   DateTime? updatedAt;
   int? updateStatus;
 
-  Product({
+  Datum({
     this.id,
     this.userId,
     this.companyId,
@@ -79,7 +79,7 @@ class Product {
     this.updateStatus,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
     userId: json["user_id"],
     companyId: json["company_id"],
@@ -122,8 +122,8 @@ class Product {
     "uom": uom,
     "available_quantity": availableQuantity,
     "status": status,
-    "created_at": createdAt!.toIso8601String(),
-    "updated_at": updatedAt!.toIso8601String(),
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
     "update_status": updateStatus,
   };
 }

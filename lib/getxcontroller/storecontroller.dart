@@ -27,6 +27,7 @@ class StoreController extends GetxController {
       }
 
     }).onError((error, stackTrace) {
+      Get.context!.loaderOverlay.hide();
       print(".....$error");
     });
   }

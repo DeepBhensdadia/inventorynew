@@ -3,10 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:inventory/getxcontroller/productcreatecontroller.dart';
 import 'package:inventory/inventory.dart';
-import 'package:inventory/scannerdesignation/createproduct.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:inventory/getxcontroller/productcontroller.dart';
 
 class ScannerScreendesignation extends StatefulWidget {
   const ScannerScreendesignation({super.key});
@@ -16,7 +15,7 @@ class ScannerScreendesignation extends StatefulWidget {
 }
 
 class _ScannerScreendesignationState extends State<ScannerScreendesignation> {
-  qrexample controllerqrwork = Get.put(qrexample());
+  ProductCreateController controllerqrwork = Get.put(ProductCreateController());
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -46,7 +45,7 @@ class _ScannerScreendesignationState extends State<ScannerScreendesignation> {
       setState(() {
         result = scanData;
         if (result != null) {
-          controllerqrwork.qrproduct.text = result?.code ?? "";
+          controllerqrwork.qrcode.text = result?.code ?? "";
           controller.stopCamera();
           Get.back();
         }

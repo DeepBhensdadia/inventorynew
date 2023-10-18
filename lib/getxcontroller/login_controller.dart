@@ -23,30 +23,61 @@ class LoginController extends GetxController {
   late Login loginst;
 
   Future<void> login() async {
-    Login login = await repository.login(
+    await repository
+        .login(
       LoginCredentials(
         email: email.text,
         password: password.text,
       ),
-    );
-
-    if (login.data == null) {
-      Fluttertoast.showToast(msg: login.message.toString());
+    )
+        .then((login) async {
+      if (login.data?.id == null) {
+        Fluttertoast.showToast(msg: login.message.toString());
+        Get.context!.loaderOverlay.hide();
+        return;
+      } else {
+        Get.context!.loaderOverlay.hide();
+        Fluttertoast.showToast(msg: login.message.toString());
+        await SharedPref.save(
+            value: jsonEncode(login.toJson()), prefKey: PrefKey.loginDetails);
+        await SharedPref.save(
+            value: jsonEncode(
+              LoginCredentials(
+                email: email.text,
+                password: password.text,
+              ),
+            ),
+            prefKey: PrefKey.logincred);
+        Get.off(const StoreCode());
+      }
+    }).onError((error, stackTrace) {
       Get.context!.loaderOverlay.hide();
-      email.clear();
-      password.clear();
-
-      return;
-    } else {
-      Get.context!.loaderOverlay.hide();
-
-      Fluttertoast.showToast(msg: login.message.toString());
-      await SharedPref.save(
-          value: jsonEncode(login.toJson()), prefKey: PrefKey.loginDetails);
-         Get.off(StoreCode());
-    }
+      print("error...$error");
+    });
   }
 
-
-
+  Future<void> logincheck() async {
+    await repository
+        .login(
+      LoginCredentials(
+        email: logindetails()?.email,
+        password: logindetails()?.password,
+      ),
+    )
+        .then((login) async {
+      if (login.data?.status == 1) {
+        Fluttertoast.showToast(msg: login.message.toString());
+        SharedPref.deleteAll();
+        Get.deleteAll();
+        Get.offAll(const LoginScreen());
+        return;
+      } else {
+        print(jsonEncode(login));
+        await SharedPref.save(
+            value: jsonEncode(login.toJson()), prefKey: PrefKey.loginDetails);
+      }
+    }).onError((error, stackTrace) {
+      print("error...$error");
+    });
+  }
 }

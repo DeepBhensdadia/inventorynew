@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/model/comapanydetailsmodel.dart';
-import 'package:inventory/model/locationlistmodel.dart';
+import 'package:inventory/model/login_credential.dart';
+
 import 'package:inventory/model/login_model.dart';
 import 'shared_pref/shared_pref.dart';
 
@@ -36,6 +37,13 @@ Companydetails? comapnydetails() {
       ? companydetailsFromJson(SharedPref.get(prefKey: PrefKey.companyDetails)!)
       : null;
   return saveuser;
+}
+
+LoginCredentials? logindetails() {
+  LoginCredentials? login = SharedPref.get(prefKey: PrefKey.logincred) != null
+      ? loginCredentialsFromJson(SharedPref.get(prefKey: PrefKey.logincred)!)
+      : null;
+  return login;
 }
 
 List<Productsdetailsforest> data = [

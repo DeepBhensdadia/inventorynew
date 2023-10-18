@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:inventory/getxcontroller/assetsupdatecontroller.dart';
 import 'package:inventory/getxcontroller/productcontroller.dart';
 import 'package:inventory/inventory.dart';
 import 'package:inventory/widgets/customforcreate.dart';
+
+import '../../model/productdetailsmodel.dart';
 
 class AssetScreen extends StatefulWidget {
   const AssetScreen({
@@ -50,11 +54,13 @@ class _AssetScreenState extends State<AssetScreen> {
     }
   }
 
-  // ProductController homeController = Get.put(ProductController());
+  ProductController homeController = Get.put(ProductController());
+  AssetsUpdateController assetcontroller = Get.put(AssetsUpdateController());
   File? profilepic;
-  // final String data;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    Product? product = homeController.assetDetails.data?.first;
     return SafeArea(
       child: Scaffold(
           // resizeToAvoidBottomInset: false,
@@ -73,169 +79,218 @@ class _AssetScreenState extends State<AssetScreen> {
             ),
           ),
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Card(
-                  margin: EdgeInsets.all(20),
-                  shape: boarderad,
-                  elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Card(
+                    margin: const EdgeInsets.all(20),
+                    shape: boarderad,
+                    elevation: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl:
+                                    baseurlimage + product!.photo.toString(),
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  height: 80,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    image: DecorationImage(
+                                      image: imageProvider,
                                       fit: BoxFit.fill,
-                                      image: AssetImage(
-                                        "assets/images/iphone_11_PNG42.png",
-                                      ))),
-                              height: 80,
-                              width: 80,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+
+                                      // colorFilter:
+                                      // ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 80,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    image: const DecorationImage(
+                                      image: NetworkImage(
+                                          "$baseurlimage/default.png"),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(" ${product.subLocation}",
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500)),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text("Item Code :  ${product.itemCode}",
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          color: subtitle,
+                                          fontWeight: FontWeight.w500)),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Category :  ${product.category}",
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: subtitle,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Location:  ${product.location}",
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      color: subtitle,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const Divider(
+                            color: Colors.grey,
+                            height: 50,
+                          ),
+                          Text(
+                            "Available Quantity : ${product.quantity}",
+                            style: const TextStyle(
+                                fontSize: 20,
+                                color: lablecolor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  product.updateStatus == 1
+                      ? const SizedBox.shrink()
+                      : Card(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          shape: boarderad,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
                               children: [
-                                Text("Iphone 14 pro",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500)),
-                                SizedBox(
-                                  height: 5,
+                                CommonTextFieldCrete(
+                                  validation: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter quantity';
+                                    }
+                                    return null;
+                                  },
+                                  controller: assetcontroller.quantity,
+                                  textname: "Enter Updated Quantity",
+                                  hintText: 'Enter Updated Quantity',
+                                  isPasswordField: false,
                                 ),
-                                Text("Item Code : I1234567",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: subtitle,
-                                        fontWeight: FontWeight.w500)),
-                                SizedBox(
-                                  height: 5,
+                                CommonTextFieldCrete(
+                                  // validation: (value) {
+                                  //   if (value!.isEmpty) {
+                                  //     return 'Please enter remark';
+                                  //   }
+                                  //   return null;
+                                  // },
+                                  controller: assetcontroller.commet,
+                                  textname: "Enter Remark",
+                                  hintText: 'Enter remark',
+                                  isPasswordField: false,
                                 ),
-                                Text(
-                                  "Category : Mobile",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: subtitle,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Upload Photo",
+                                        style: TextStyle(
+                                            // fontFamily: 'gilroy',
+                                            fontSize: screenheight(context,
+                                                dividedby: 50),
+                                            color: lablecolor,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      ElevatedButton(
+                                          style: ButtonStyle(
+                                              padding: MaterialStateProperty
+                                                  .resolveWith((states) =>
+                                                      EdgeInsets.zero),
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith(
+                                                          (states) => purple)),
+                                          onPressed: () {
+                                            pickgallarycamera();
+                                          },
+                                          child: const Icon(
+                                              Icons.camera_alt_outlined))
+                                    ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 5,
+                                profilepic != null
+                                    ? Row(
+                                        children: [
+                                          Card(
+                                              elevation: 3,
+                                              child: Container(
+                                                height: 100,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: FileImage(
+                                                            profilepic!))),
+                                              )),
+                                          IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  profilepic = null;
+                                                });
+                                              },
+                                              icon: const Icon(Icons.clear))
+                                        ],
+                                      )
+                                    : const SizedBox.shrink(),
+                                const SizedBox(
+                                  height: 8,
                                 ),
-                                Text(
-                                  "Location: Store",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: subtitle,
-                                  ),
+                                CustomButton(
+                                    name: 'Update',
+                                    onPressed: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        await assetcontroller.updatequantity(
+                                            photo: profilepic);
+                                      }
+                                    }),
+                                const SizedBox(
+                                  height: 8,
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                        Divider(
-                          color: Colors.grey,
-                          height: 50,
-                        ),
-                        Text(
-                          "Available Quantity : 120",
-                          style: TextStyle(
-                              fontSize: 20,color: lablecolor, fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  shape: boarderad,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        CommonTextFieldCrete(
-                          textname: "Enter Updated Quantity",
-                          hintText: 'Enter Updated Quantity',
-                          isPasswordField: false,
-                        ),
-                        CommonTextFieldCrete(
-                          textname: "Enter Remark",
-                          hintText: 'Enter remark',
-                          isPasswordField: false,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Upload Photo",
-                                style: TextStyle(
-                                    // fontFamily: 'gilroy',
-                                    fontSize:
-                                        screenheight(context, dividedby: 50),
-                                    color: lablecolor,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              ElevatedButton(
-                                  style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.resolveWith(
-                                              (states) => EdgeInsets.zero),
-                                      backgroundColor:
-                                          MaterialStateProperty.resolveWith(
-                                              (states) => purple)),
-                                  onPressed: () {
-                                    pickgallarycamera();
-                                  },
-                                  child: Icon(Icons.camera_alt_outlined))
-                            ],
                           ),
                         ),
-                        profilepic != null
-                            ? Row(
-                                children: [
-                                  Card(
-                                      elevation: 3,
-                                      child: Container(
-                                        height: 100,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: FileImage(profilepic!))),
-                                      )),
-                                  IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          profilepic = null;
-                                        });
-                                      },
-                                      icon: Icon(Icons.clear))
-                                ],
-                              )
-                            : SizedBox.shrink(),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        CustomButton(
-                            name: 'Update',
-                            onPressed: () async {
-                              // await assetController.updatedata();
-                            }),
-                        SizedBox(
-                          height: 8,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           )),
     );
@@ -245,7 +300,7 @@ class _AssetScreenState extends State<AssetScreen> {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
+        return SizedBox(
           height: 195,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
@@ -260,11 +315,11 @@ class _AssetScreenState extends State<AssetScreen> {
                           fontFamily: 'SF Pro Display',
                           fontSize: 19,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xff909196).withOpacity(1)),
+                          color: const Color(0xff909196).withOpacity(1)),
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 InkWell(
@@ -272,19 +327,19 @@ class _AssetScreenState extends State<AssetScreen> {
                     Get.back();
                     pickcoverimagecamera();
                   },
-                  child: Container(
+                  child: SizedBox(
                     height: 40,
                     child: Row(
                       children: [
                         Center(
                             child: Icon(Icons.camera_alt,
-                                color: Color(0xff909196).withOpacity(1))),
+                                color: const Color(0xff909196).withOpacity(1))),
                         const SizedBox(
                           width: 18,
                         ),
                         Center(
                             child: Text("Camera".tr,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontFamily: 'SF Pro Display',
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -299,20 +354,20 @@ class _AssetScreenState extends State<AssetScreen> {
 
                     pickcoverimagegallary();
                   },
-                  child: Container(
+                  child: SizedBox(
                     height: 40,
                     child: Row(
                       children: [
                         Center(
                             child: Icon(Icons.image_rounded,
-                                color: Color(0xff909196).withOpacity(1))),
-                        SizedBox(
+                                color: const Color(0xff909196).withOpacity(1))),
+                        const SizedBox(
                           width: 18,
                         ),
                         Center(
                           child: Text(
                             "Gallery".tr,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'SF Pro Display',
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -324,30 +379,30 @@ class _AssetScreenState extends State<AssetScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 7,
                 ),
                 InkWell(
                   onTap: () async {
                     Navigator.pop(context);
                   },
-                  child: Container(
+                  child: SizedBox(
                     height: 40,
                     child: Row(
                       children: [
-                        Center(
+                        const Center(
                           child: Icon(
                             Icons.cancel,
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 18,
                         ),
                         Center(
                           child: Text(
                             "Close".tr,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'SF Pro Display',
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
@@ -359,7 +414,7 @@ class _AssetScreenState extends State<AssetScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
               ],
