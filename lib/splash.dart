@@ -24,7 +24,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
         if (SharedPref.get(prefKey: PrefKey.loginDetails) != null) {
           if (SharedPref.get(prefKey: PrefKey.companyDetails) != null) {
             // context.loaderOverlay.show();
-            locationcontroll.Location();
+           saveUser()?.data?.roleDesignation != "1" ?  locationcontroll.Location() : locationcontroll.Location2();
             // context.loaderOverlay.hide();
           } else {
             Get.off(const StoreCode());

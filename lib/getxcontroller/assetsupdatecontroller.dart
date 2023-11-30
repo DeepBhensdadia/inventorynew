@@ -12,6 +12,7 @@ class AssetsUpdateController extends GetxController {
   // TextEditingController quantity = TextEditingController();
 
   updatequantity({
+    required String assetid,
     File? photo,
   }) async {
     Get.context!.loaderOverlay.show();
@@ -22,7 +23,7 @@ class AssetsUpdateController extends GetxController {
     };
 
     await WebRepository()
-        .quantityupdate(parameter: parameter, imageFile: photo)
+        .quantityupdate(id: assetid, parameter: parameter, imageFile: photo)
         .then((value) {
       Get.context!.loaderOverlay.hide();
       Fluttertoast.showToast(msg: value.massage ?? "");

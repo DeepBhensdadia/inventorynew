@@ -14,7 +14,7 @@ class ProductCreateController extends GetxController {
   TextEditingController assetsname = TextEditingController();
   TextEditingController quantity = TextEditingController();
   TextEditingController remark = TextEditingController();
-
+ String locationid = "";
 creteproduct({
    File? photo,
   }) async {
@@ -28,12 +28,18 @@ creteproduct({
       'asset': assetsname.text,
       'quantity': quantity.text,
       'uom': 'Pcs',
-      'remark': remark.text
+      'remark': remark.text,
+      'location' : locationid
     };
     await WebRepository().productCreateapi(parameter: parameter, imageFile: photo).then((value) {
       Get.context!.loaderOverlay.hide();
       Fluttertoast.showToast(msg: value.message ?? "");
       if (value.message == "Saved Successfully") {
+        itemcode.clear();
+        qrcode.clear();
+        assetsname.clear();
+        quantity.clear();
+        remark.clear();
         Get.back();
       }
     }).onError((error, stackTrace) {

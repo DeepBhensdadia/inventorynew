@@ -8,22 +8,23 @@ import '../../src/Asset/asset_screen.dart';
 
 class ProductController extends GetxController {
   late Productsdetails assetDetails;
-  TextEditingController assetnumber = TextEditingController(text: "B10021451");
+  TextEditingController assetnumber = TextEditingController();
   String locationid = "";
   detailsscreen() async {
     await WebRepository()
         .productdetailsapi(
             locationid: locationid, productcode: assetnumber.text)
         .then((value) {
-     if(value.data!.isNotEmpty){
-       assetDetails = value;
-       print(jsonEncode(value));
-       Get.to(const AssetScreen());
-       Get.context!.loaderOverlay.hide();
-     }else{
-       Fluttertoast.showToast(msg: "Data is not available..");
-       Get.context!.loaderOverlay.hide();
-     }
+      if (value.data!.isNotEmpty) {
+        assetDetails = value;
+        print(jsonEncode(value));
+        Get.to(const AssetScreen());
+        assetnumber.clear();
+        Get.context!.loaderOverlay.hide();
+      } else {
+        Fluttertoast.showToast(msg: "Data is not available..");
+        Get.context!.loaderOverlay.hide();
+      }
     }).onError((error, stackTrace) {
       Get.context!.loaderOverlay.hide();
       print(error);
@@ -32,23 +33,23 @@ class ProductController extends GetxController {
 }
 
 class ProductControllerwithQr extends GetxController {
-  late Productsdetails assetDetails;
-  String locationid = "";
+  ProductController productController = Get.put(ProductController());
   detailsscreen(String qrdata) async {
     await WebRepository()
-        .productdetailswithQrapi(locationid: locationid, productcode: qrdata)
+        .productdetailswithQrapi(
+            locationid: productController.locationid, productcode: qrdata)
         .then((value) {
       if (value.data!.isNotEmpty) {
-        assetDetails = value;
-        Get.context!.loaderOverlay.hide();
+        productController.assetDetails = value;
         print(jsonEncode(value));
         Get.to(const AssetScreen());
+        Get.context!.loaderOverlay.hide();
       } else {
         Fluttertoast.showToast(msg: "Data is not available..");
+        Get.context!.loaderOverlay.hide();
       }
     }).onError((error, stackTrace) {
       print(error);
     });
   }
 }
-

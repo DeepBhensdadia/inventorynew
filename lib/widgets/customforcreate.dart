@@ -14,7 +14,7 @@ class CommonTextFieldCrete extends StatefulWidget {
     this.isPasswordField = true,
     this.readonly = false,
     this.prefixicon,
-    this.validation,
+    this.validation, this.focusnood,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -23,6 +23,7 @@ class CommonTextFieldCrete extends StatefulWidget {
   final String? countertext;
   final bool isPasswordField;
   final bool readonly;
+  final FocusNode? focusnood;
 
   @override
   State<CommonTextFieldCrete> createState() => _CommonTextFieldCreteState();
@@ -58,6 +59,7 @@ class _CommonTextFieldCreteState extends State<CommonTextFieldCrete> {
             // ),
             child: TextFormField(
               // autofocus: true,
+              focusNode: widget.focusnood,
               readOnly: widget.readonly,
               controller: widget.controller,
               obscureText: isPasswordField,

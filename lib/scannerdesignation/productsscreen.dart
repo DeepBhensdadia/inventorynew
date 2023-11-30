@@ -1,10 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:inventory/getxcontroller/createproducthistorycontroller.dart';
 import 'package:inventory/getxcontroller/locationcontroller.dart';
-import 'package:inventory/getxcontroller/productcontroller.dart';
 import 'package:inventory/getxcontroller/productcreatecontroller.dart';
 import 'package:inventory/inventory.dart';
-import 'package:inventory/scannerdesignation/createinventory.dart';
 import 'package:inventory/scannerdesignation/createproduct.dart';
 import 'package:inventory/src/storecode/store_code_screen.dart';
 import 'package:inventory/widgets/custom_dropdown.dart';
@@ -19,13 +16,14 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   @override
   void initState() {
-    if(locationController.weblocation.data!.isNotEmpty){
-    productcontroller.locationid =
-        locationController.weblocation.data?.first.id.toString() ?? "";}
+    if (locationController.weblocation.data!.isNotEmpty) {
+      id.locationid =
+          locationController.weblocation.data?.first.id.toString() ?? "";
+    }
     super.initState();
   }
 
-  ProductController productcontroller = Get.put(ProductController());
+  ProductCreateController id = Get.put(ProductCreateController());
   LocatioController locationController = Get.put(LocatioController());
   CreateProductListController productListController =
       Get.put(CreateProductListController());
@@ -41,6 +39,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
             backgroundColor: purple,
             elevation: 5,
             toolbarHeight: 60,
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    SharedPref.deleteAll();
+                    Get.deleteAll();
+                    Get.offAll(() => const LoginScreen());
+                  },
+                  icon: const Icon(Icons.logout)),
+              // IconButton(
+              //     onPressed: () {
+              //       Get.to(const ProductsScreen());
+              //     },
+              //     icon: const Icon(Icons.add_circle_outline))
+            ],
             title: Row(
               children: [
                 Image.asset(
@@ -107,7 +119,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 15.0, vertical: 10),
-                    child:     Card(
+                    child: Card(
                       shape: boarderad,
                       margin: EdgeInsets.zero,
                       elevation: 3,
@@ -120,7 +132,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             Text(
                               'Current Selected Company',
                               style: TextStyle(
-                                  fontSize: screenheight(context, dividedby: 50),
+                                  fontSize:
+                                      screenheight(context, dividedby: 50),
                                   color: lablecolor,
                                   fontWeight: FontWeight.w500),
                             ),
@@ -130,8 +143,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 AlertDialog dialog = AlertDialog(
                                   title: Text('Do You Want To Change Company',
                                       style: TextStyle(
-                                        fontSize:
-                                        screenheight(context, dividedby: 50),
+                                        fontSize: screenheight(context,
+                                            dividedby: 50),
                                         fontFamily: 'gilroy.bold',
                                       )),
                                   actions: [
@@ -175,8 +188,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
-                                        color:
-                                        Colors.grey.shade600.withOpacity(0.5),
+                                        color: Colors.grey.shade600
+                                            .withOpacity(0.5),
                                         blurRadius: 2,
                                         spreadRadius: 0.2,
                                         offset: const Offset(1, 1)),
@@ -189,7 +202,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       horizontal: 15, vertical: 10),
                                   child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           ' ${comapnydetails()?.data?.companyName}',
@@ -216,9 +229,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 Text(
                                   'Select Location',
                                   style: TextStyle(
-                                    // fontFamily: 'gilroy',
+                                      // fontFamily: 'gilroy',
                                       fontSize:
-                                      screenheight(context, dividedby: 50),
+                                          screenheight(context, dividedby: 50),
                                       color: lablecolor,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -227,43 +240,46 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             const SizedBox(height: 10),
                             Container(
                               // padding: const EdgeInsets.all(5.0),
-                              child:  locationController.weblocation.data!.isEmpty
+                              child: locationController
+                                      .weblocation.data!.isEmpty
                                   ? Container(
-                                alignment: Alignment.centerLeft,
-                                height: screenheight(context, dividedby: 20),
-                                // width: screenwidth(context, dividedby: 1),
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey.shade600
-                                            .withOpacity(0.5),
-                                        blurRadius: 2,
-                                        spreadRadius: 0.2,
-                                        offset: const Offset(1, 1)),
-                                  ],
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.white,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Text(
-                                    'No Location',
-                                    style: TextStyle(
-                                        fontSize: screenheight(context,
-                                            dividedby: 45),
-                                        fontFamily: 'gilroy.bold',
-                                        color: Colors.grey.shade400),
-                                  ),
-                                ),
-                              )
+                                      alignment: Alignment.centerLeft,
+                                      height:
+                                          screenheight(context, dividedby: 20),
+                                      // width: screenwidth(context, dividedby: 1),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.grey.shade600
+                                                  .withOpacity(0.5),
+                                              blurRadius: 2,
+                                              spreadRadius: 0.2,
+                                              offset: const Offset(1, 1)),
+                                        ],
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: Colors.white,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Text(
+                                          'No Location',
+                                          style: TextStyle(
+                                              fontSize: screenheight(context,
+                                                  dividedby: 45),
+                                              fontFamily: 'gilroy.bold',
+                                              color: Colors.grey.shade400),
+                                        ),
+                                      ),
+                                    )
                                   : CustomDropDown(
-                                result: locationController.weblocation.data!,
-                                onSelection: (var value) {
-                                  // controller.locationid = value.toString();
-                                  print(value.toString());
-                                },
-                              ),
+                                      result:
+                                          locationController.weblocation.data!,
+                                      onSelection: (var value) {
+                                        id.locationid = value.toString();
+                                        print(value.toString());
+                                      },
+                                    ),
                             ),
                             const SizedBox(height: 20),
                           ],

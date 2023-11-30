@@ -14,18 +14,19 @@ class StoreController extends GetxController {
     await WebRepository()
         .companydetaisapi(codecontroller.text)
         .then((value) async {
-          Get.context!.loaderOverlay.hide();
+      Get.context!.loaderOverlay.hide();
       if (kDebugMode) {
         print(jsonEncode(value));
       }
-      if(value.data?.id != null){
-         await SharedPref.save(
-             value: jsonEncode(value.toJson()), prefKey: PrefKey.companyDetails);
-         locationcontroll.Location();
-      }else{
+      if (value.data?.id != null) {
+        await SharedPref.save(
+            value: jsonEncode(value.toJson()), prefKey: PrefKey.companyDetails);
+        saveUser()?.data?.roleDesignation != "1"
+            ? locationcontroll.Location()
+            : locationcontroll.Location2();
+      } else {
         Fluttertoast.showToast(msg: "Invalid Comapny Code");
       }
-
     }).onError((error, stackTrace) {
       Get.context!.loaderOverlay.hide();
       print(".....$error");

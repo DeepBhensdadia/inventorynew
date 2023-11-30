@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
-    logincontroller.logincheck();
+    // logincontroller.logincheck();
     if (locationController.weblocation.data!.isNotEmpty) {
       procontroller.locationid =
           locationController.weblocation.data?.first.id.toString() ?? "";
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ProductUpdatedHistoryController historycontroller =
       Get.put(ProductUpdatedHistoryController());
   final _formKey = GlobalKey<FormState>();
-
+FocusNode focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     context.loaderOverlay.hide();
@@ -55,11 +55,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Get.offAll(() => const LoginScreen());
                 },
                 icon: const Icon(Icons.logout)),
-            IconButton(
-                onPressed: () {
-                  Get.to(const ProductsScreen());
-                },
-                icon: const Icon(Icons.add_circle_outline))
+            // IconButton(
+            //     onPressed: () {
+            //       Get.to(const ProductsScreen());
+            //     },
+            //     icon: const Icon(Icons.add_circle_outline))
           ],
           iconTheme: const IconThemeData(color: white, size: 30),
           backgroundColor: purple,
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Auditor",
+                             Text( saveUser()?.data?.roleDesignation == "2" ? "Auditor" : "Admin",
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
                             // Text("${saveUser()?.data?.email}" ?? "",
@@ -281,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     result:
                                         locationController.weblocation.data!,
                                     onSelection: (var value) {
-                                      // controller.locationid = value.toString();
+                                      procontroller.locationid = value.toString();
                                       print(value.toString());
                                     },
                                   ),
@@ -306,6 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           children: [
                             CommonTextFieldCrete(
+                              focusnood: focusNode,
                               validation: (value) {
                                 if (value!.isEmpty) {
                                   return 'Please enter asset number';
@@ -322,6 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 name: 'Submit',
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
+                                    focusNode.unfocus();
                                     // Get.to(AssetScreen());
                                     context.loaderOverlay.show();
                                     await procontroller.detailsscreen();

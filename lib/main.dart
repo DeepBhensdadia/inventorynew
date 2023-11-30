@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
       overlayColor: Colors.grey.withOpacity(0.2),
       useDefaultLoading: false,
       overlayWidget: Center(
-          child: LoadingAnimationWidget.inkDrop(
-              color: purple, size: 40)),
+          child: LoadingAnimationWidget.inkDrop(color: purple, size: 40)),
       child: GetMaterialApp(
         smartManagement: SmartManagement.onlyBuilder,
         debugShowCheckedModeBanner: false,

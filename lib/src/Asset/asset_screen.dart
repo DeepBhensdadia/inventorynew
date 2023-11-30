@@ -59,6 +59,13 @@ class _AssetScreenState extends State<AssetScreen> {
   File? profilepic;
   final _formKey = GlobalKey<FormState>();
   @override
+  void initState() {
+    assetcontroller.quantity.clear();
+    assetcontroller.commet.clear();
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     Product? product = homeController.assetDetails.data?.first;
     return SafeArea(
@@ -131,7 +138,7 @@ class _AssetScreenState extends State<AssetScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(" ${product.subLocation}",
+                                  Text("${product.asset}",
                                       style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500)),
@@ -279,6 +286,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         await assetcontroller.updatequantity(
+                                          assetid: product.id.toString(),
                                             photo: profilepic);
                                       }
                                     }),

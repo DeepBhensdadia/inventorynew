@@ -59,8 +59,15 @@ class _CreateProductState extends State<CreateProduct> {
   @override
   void initState() {
     // TODO: implement initState
+    createproduct.itemcode.clear();
+    createproduct.qrcode.clear();
+    createproduct.assetsname.clear();
+    createproduct.quantity.clear();
+    createproduct.remark.clear();
     createproduct.qrcode.addListener(() {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
     super.initState();
   }
@@ -110,15 +117,13 @@ class _CreateProductState extends State<CreateProduct> {
                           hintText: 'Enter Item Code',
                           isPasswordField: false,
                         ),
-
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child:   Text(
+                          child: Text(
                             "QR Code",
                             style: TextStyle(
-                              // fontFamily: 'gilroy',
-                                fontSize:
-                                screenheight(context, dividedby: 55),
+                                // fontFamily: 'gilroy',
+                                fontSize: screenheight(context, dividedby: 55),
                                 color: lablecolor,
                                 fontWeight: FontWeight.w500),
                           ),
@@ -131,8 +136,8 @@ class _CreateProductState extends State<CreateProduct> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10.0),
                                 decoration: BoxDecoration(
-                                  // color: Colors.blueGrey.withOpacity(0.3),
-                                ),
+                                    // color: Colors.blueGrey.withOpacity(0.3),
+                                    ),
                                 child: TextFormField(
                                   validator: (value) {
                                     if (value!.isEmpty) {
@@ -144,17 +149,19 @@ class _CreateProductState extends State<CreateProduct> {
                                   decoration: InputDecoration(
                                     fillColor: purple,
                                     border: OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(width: 1, color: Colors.grey.shade500),
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color: Colors.grey.shade500),
                                         borderRadius: BorderRadius.circular(6)),
                                     // enabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1,color: Colors.grey.shade500),borderRadius: BorderRadius.circular(6)),
                                     // disabledBorder: OutlineInputBorder(borderSide: BorderSide(width: 1,color: Colors.grey.shade500),borderRadius: BorderRadius.circular(6)),
                                     focusedErrorBorder: OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(width: 1, color: Colors.grey.shade500),
+                                        borderSide: BorderSide(
+                                            width: 1,
+                                            color: Colors.grey.shade500),
                                         borderRadius: BorderRadius.circular(6)),
-                                    contentPadding:
-                                    const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 15),
 
                                     hintText: "Enter Product Code",
                                     // counterText: widget.countertext,
@@ -188,7 +195,7 @@ class _CreateProductState extends State<CreateProduct> {
                           isPasswordField: false,
                         ),
                         Row(
-                          crossAxisAlignment:  CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               flex: 2,

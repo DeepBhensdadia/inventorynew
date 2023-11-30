@@ -25,13 +25,13 @@ const Color greencolor = Color(0xff78A947);
 const Color subtitle = Colors.black45;
 const Color white = Colors.white;
 
+
 Login? saveUser() {
   Login? saveuser = SharedPref.get(prefKey: PrefKey.loginDetails) != null
       ? loginFromJson(SharedPref.get(prefKey: PrefKey.loginDetails)!)
       : null;
   return saveuser;
 }
-
 Companydetails? comapnydetails() {
   Companydetails? saveuser = SharedPref.get(prefKey: PrefKey.companyDetails) != null
       ? companydetailsFromJson(SharedPref.get(prefKey: PrefKey.companyDetails)!)

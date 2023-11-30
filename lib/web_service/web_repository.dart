@@ -12,8 +12,12 @@ import 'package:inventory/model/login_model.dart';
 import 'package:inventory/model/productstoreresponse.dart';
 import '../model/historyupdatequntityresponse.dart';
 
-const String baseurl = "http://192.168.29.248:8000/api";
-const String baseurlimage = "http://192.168.29.248:8000/assets/uploads/media/";
+// const String baseurl = "http://192.168.29.248:8000/api";
+// const String baseurlimage =
+//     "http://192.168.29.248:8000/assets/uploads/media/";
+const String baseurl = "https://horn7.com/ivapp/public/api";
+const String baseurlimage =
+    "https://horn7.com/ivapp/public/assets/uploads/media/";
 
 class WebRepository {
   var headers = {'Content-Type': 'application/json'};
@@ -27,7 +31,8 @@ class WebRepository {
   }
 
   Future<Companydetails> companydetaisapi(String companyid) {
-    String url = '$baseurl/company?company_code=$companyid';
+    String url =
+        '$baseurl/company?company_code=$companyid&user_id=${saveUser()?.data?.id}';
     return http
         .get(
       Uri.parse(url),
@@ -53,7 +58,7 @@ class WebRepository {
     required String productcode,
   }) {
     String url =
-        '$baseurl/Productbyitemcode?company_id=${comapnydetails()?.data?.id}&location=115&itemcode=$productcode';
+        '$baseurl/Productbyitemcode?company_id=${comapnydetails()?.data?.id}&location=$locationid&itemcode=$productcode&user_id=${saveUser()?.data?.id}';
     return http
         .get(
       Uri.parse(url),
@@ -68,7 +73,7 @@ class WebRepository {
     required String productcode,
   }) {
     String url =
-        '$baseurl/ProductbyQrcode?company_id=${comapnydetails()?.data?.id}&location=115&product_code=$productcode';
+        '$baseurl/ProductbyQrcode?company_id=${comapnydetails()?.data?.id}&location=$locationid&product_code=$productcode&user_id=${saveUser()?.data?.id}';
     return http
         .get(
       Uri.parse(url),
@@ -79,8 +84,8 @@ class WebRepository {
   }
 
   Future<Historyresponsemodel> quntityupdatedhistory() {
-    String url =
-        '$baseurl/qtyhistory';
+    String url = '$baseurl/qtyhistory';
+    // String url = '$baseurl/qtyhistory&user_id=${saveUser()?.data?.id}';
     return http
         .get(
       Uri.parse(url),
@@ -102,12 +107,12 @@ class WebRepository {
     });
   }
 
-
   Future<Assetresponsemodel> quantityupdate({
     required Map<String, dynamic> parameter,
+    required String id,
     File? imageFile,
   }) async {
-    String url = '$baseurl/QtyUpdateByid/12';
+    String url = '$baseurl/QtyUpdateByid/$id';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
@@ -136,20 +141,19 @@ class WebRepository {
     }
   }
 
-
   Future<Productstoreresponsemodel> productCreateapi({
     required Map<String, dynamic> parameter,
     File? imageFile, // Add a parameter for the image file
   }) async {
     String url = '$baseurl/Product_store';
 
-        var request = http.MultipartRequest('POST', Uri.parse(url));
+    var request = http.MultipartRequest('POST', Uri.parse(url));
 
-        for (var entry in parameter.entries) {
+    for (var entry in parameter.entries) {
       request.fields[entry.key] = entry.value.toString();
     }
 
-        if (imageFile != null) {
+    if (imageFile != null) {
       var imageStream = http.ByteStream(imageFile.openRead());
       var length = await imageFile.length();
 
@@ -169,7 +173,6 @@ class WebRepository {
       throw Exception('Failed to upload the image and data');
     }
   }
-
 }
 // http://tagmyassets.com/ivapp/api/app_login
 // [POST]

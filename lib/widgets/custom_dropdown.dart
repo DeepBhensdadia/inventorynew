@@ -19,7 +19,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
   @override
   void initState() {
     // TODO: implement initState
-    valueNotifier = ValueNotifier<String>(widget.result.first.locationCode ?? "");
+    valueNotifier =
+        ValueNotifier<String>(widget.result.first.id.toString() ?? "");
     super.initState();
   }
 
@@ -50,18 +51,19 @@ class _CustomDropDownState extends State<CustomDropDown> {
             items: widget.result
                 .map<DropdownMenuItem<String>>(
                   (element) => DropdownMenuItem<String>(
-                    value: element.locationCode,
-                    child: Text(
-                        '${element.locationName} ${element.locationCode}'),
+                    value: element.id.toString(),
+                    child:
+                        Text('${element.locationName} ${element.locationCode}'),
                   ),
                 )
                 .toList(),
             onChanged: (value) {
               widget.onSelection(value);
               valueNotifier.value = widget.result
-                  .where((element) => element.locationCode!.contains(value!))
+                  .where((element) => element.id.toString().contains(value!))
                   .toList()[0]
-                  .locationCode!;
+                  .id
+                  .toString();
             },
           ),
         ),
