@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:inventory/inventory.dart';
 import 'package:inventory/model/assetupdateresponse.dart';
 import 'package:inventory/model/comapanydetailsmodel.dart';
@@ -12,12 +13,10 @@ import 'package:inventory/model/login_model.dart';
 import 'package:inventory/model/productstoreresponse.dart';
 import '../model/historyupdatequntityresponse.dart';
 
-// const String baseurl = "http://192.168.29.248:8000/api";
-// const String baseurlimage =
-//     "http://192.168.29.248:8000/assets/uploads/media/";
-const String baseurl = "https://horn7.com/ivapp/public/api";
-const String baseurlimage =
-    "https://horn7.com/ivapp/public/assets/uploads/media/";
+// const String maindn = "http://192.168.29.199:8005";
+const String maindn = "https://tagmyassets.com/ivapp/public";
+const String baseurl = "$maindn/api";
+const String baseurlimage = "$maindn/assets/uploads/media/";
 
 class WebRepository {
   var headers = {'Content-Type': 'application/json'};
@@ -58,7 +57,7 @@ class WebRepository {
     required String productcode,
   }) {
     String url =
-        '$baseurl/Productbyitemcode?company_id=${comapnydetails()?.data?.id}&location=$locationid&itemcode=$productcode&user_id=${saveUser()?.data?.id}';
+        '$baseurl/Productbyitemcode?company_id=${comapnydetails()?.data?.id}&itemcode=$productcode';
     return http
         .get(
       Uri.parse(url),
@@ -73,10 +72,10 @@ class WebRepository {
     required String productcode,
   }) {
     String url =
-        '$baseurl/ProductbyQrcode?company_id=${comapnydetails()?.data?.id}&location=$locationid&product_code=$productcode&user_id=${saveUser()?.data?.id}';
+        '$baseurl/ProductbyQrcode?company_id=${comapnydetails()?.data?.id}&product_code=$productcode';
     return http
         .get(
-      Uri.parse(url),
+      Uri.  parse(url),
     )
         .then((http.Response response) {
       return productsdetailsFromJson(response.body);
@@ -107,10 +106,22 @@ class WebRepository {
     });
   }
 
+  Future<Assetresponsemodel> editqtyhitory(
+      {required String quantity, required String productid}) {
+    Map<String, dynamic> parameter = {"quantity": quantity};
+
+    String url = '$baseurl/edit_histroy_qty/$productid';
+    return http
+        .post(Uri.parse(url), body: parameter)
+        .then((http.Response response) {
+      return assetresponsemodelFromJson(response.body);
+    });
+  }
+
   Future<Assetresponsemodel> quantityupdate({
     required Map<String, dynamic> parameter,
     required String id,
-    File? imageFile,
+    List<XFile>? imageFile,
   }) async {
     String url = '$baseurl/QtyUpdateByid/$id';
 
@@ -120,14 +131,21 @@ class WebRepository {
       request.fields[entry.key] = entry.value.toString();
     }
 
-    if (imageFile != null) {
-      var imageStream = http.ByteStream(imageFile.openRead());
-      var length = await imageFile.length();
-
-      var multipartFile = http.MultipartFile('photo', imageStream, length,
-          filename: imageFile.path.split('/').last);
-
-      request.files.add(multipartFile);
+    if (imageFile?.length != 0) {
+      imageFile?.forEach((imageFile) async {
+        // var imageStream = http.ByteStream(imageFile.openRead());
+        // var length = await imageFile.length();
+        //
+        // var multipartFile = http.MultipartFile('photo[]', imageStream, length,
+        //     filename: imageFile.path.split('/').last);
+        //
+        // request.files.add(multipartFile);
+        request.files.add(await http.MultipartFile.fromPath(
+          'photo[]', // field name for the image in the server
+          imageFile.path,
+          // contentType: MediaType('image', 'jpeg'), // Adjust the content type as needed
+        ));
+      });
     }
 
     http.StreamedResponse response = await request.send();

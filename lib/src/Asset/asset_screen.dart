@@ -6,7 +6,9 @@ import 'package:inventory/getxcontroller/productcontroller.dart';
 import 'package:inventory/inventory.dart';
 import 'package:inventory/widgets/customforcreate.dart';
 
+import '../../getxcontroller/locationcontroller.dart';
 import '../../model/productdetailsmodel.dart';
+import '../../widgets/custom_dropdown.dart';
 
 class AssetScreen extends StatefulWidget {
   const AssetScreen({
@@ -25,10 +27,14 @@ class _AssetScreenState extends State<AssetScreen> {
     );
 
     if (Selectedimage != null) {
-      File convertedFile = File(Selectedimage.path);
-      setState(() {
-        profilepic = convertedFile;
-      });
+      // File convertedFile = File(Selectedimage.path);
+      if (profilepic.length == 3) {
+        Fluttertoast.showToast(msg: "Only 3 Images select");
+      } else {
+        setState(() {
+          profilepic.add(Selectedimage);
+        });
+      }
 
       // Fluttertoast.showToast(msg: "Image Selected");
     } else {
@@ -43,10 +49,14 @@ class _AssetScreenState extends State<AssetScreen> {
     );
 
     if (Selectedimage != null) {
-      File convertedFile = File(Selectedimage.path);
-      setState(() {
-        profilepic = convertedFile;
-      });
+      // File convertedFile = File(Selectedimage.path);
+      if (profilepic.length == 3) {
+        Fluttertoast.showToast(msg: "Only 3 Images select");
+      } else {
+        setState(() {
+          profilepic.add(Selectedimage);
+        });
+      }
 
       // Fluttertoast.showToast(msg: "Image Selected");
     } else {
@@ -56,18 +66,26 @@ class _AssetScreenState extends State<AssetScreen> {
 
   ProductController homeController = Get.put(ProductController());
   AssetsUpdateController assetcontroller = Get.put(AssetsUpdateController());
-  File? profilepic;
+  LocatioController locationController = Get.put(LocatioController());
+  ProductController procontroller = Get.put(ProductController());
+
+  List<XFile> profilepic = [];
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     assetcontroller.quantity.clear();
     assetcontroller.commet.clear();
+    if (locationController.weblocation.data!.isNotEmpty) {
+      procontroller.locationid =
+          locationController.weblocation.data?.first.id.toString() ?? "";
+    }
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    Product? product = homeController.assetDetails.data?.first;
+    Product? product = homeController.assetDetails.data;
     return SafeArea(
       child: Scaffold(
           // resizeToAvoidBottomInset: false,
@@ -100,10 +118,13 @@ class _AssetScreenState extends State<AssetScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CachedNetworkImage(
-                                imageUrl:
-                                    baseurlimage + product!.photo.toString(),
+                                imageUrl: product!.photos?.length == 0
+                                    ? "$baseurlimage/default.png"
+                                    : baseurlimage +
+                                        (product.photos?[0].toString() ?? ""),
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                   height: 80,
@@ -135,62 +156,166 @@ class _AssetScreenState extends State<AssetScreen> {
                               const SizedBox(
                                 width: 15,
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("${product.asset}",
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500)),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text("Item Code :  ${product.itemCode}",
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          color: subtitle,
-                                          fontWeight: FontWeight.w500)),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "Category :  ${product.category}",
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: subtitle,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Asset No :  ${product.assetno ?? ""}",
+                                        maxLines: 5,
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            color: subtitle,
+                                            fontWeight: FontWeight.w500)),
+                                    const SizedBox(
+                                      height: 5,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "Location:  ${product.location}",
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: subtitle,
+                                    Text("${product.asset}",
+                                        style: TextStyle(
+                                            // overflow: TextOverflow.ellipsis,
+                                            fontSize: screenwidth(context,
+                                                dividedby: 10),
+                                            fontWeight: FontWeight.w500)),
+                                    const SizedBox(
+                                      height: 5,
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      "Category :  ${product.category ?? ""}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: subtitle,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "Location:  ${product.location ?? ""}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: subtitle,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "Sub Location:  ${product.subLocation ?? ""}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: subtitle,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "Serial No:  ${product.serial ?? ""}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: subtitle,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                          const Divider(
-                            color: Colors.grey,
-                            height: 50,
-                          ),
-                          Text(
-                            "Available Quantity : ${product.quantity}",
-                            style: const TextStyle(
-                                fontSize: 20,
-                                color: lablecolor,
-                                fontWeight: FontWeight.w500),
-                          ),
+                          // const Divider(
+                          //   color: Colors.grey,
+                          //   height: 50,
+                          // ),
+                          // Text(
+                          //   "Available Quantity : ${product.quantity}",
+                          //   style: const TextStyle(
+                          //       fontSize: 20,
+                          //       color: lablecolor,
+                          //       fontWeight: FontWeight.w500),
+                          // ),
                         ],
                       ),
                     ),
                   ),
                   product.updateStatus == 1
-                      ? const SizedBox.shrink()
+                      ? (product.photos?.length ?? 0) > 1
+                          ? Card(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              shape: boarderad,
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                        "Photos",
+                                        style: TextStyle(
+                                            // fontFamily: 'gilroy',
+                                            fontSize: screenheight(context,
+                                                dividedby: 45),
+                                            color: lablecolor,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 100,
+                                      child: ListView.builder(
+                                        itemCount: product.photos?.length,
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder: (context, index) =>
+                                            Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: CachedNetworkImage(
+                                            imageUrl: baseurlimage +
+                                                (product.photos?[index]
+                                                        .toString() ??
+                                                    ""),
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.fill,
+
+                                                  // colorFilter:
+                                                  // ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                                                ),
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Container(
+                                              height: 80,
+                                              width: 80,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                image: const DecorationImage(
+                                                  image: NetworkImage(
+                                                      "$baseurlimage/default.png"),
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink()
                       : Card(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           shape: boarderad,
@@ -198,18 +323,99 @@ class _AssetScreenState extends State<AssetScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                CommonTextFieldCrete(
-                                  validation: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Please enter quantity';
-                                    }
-                                    return null;
-                                  },
-                                  controller: assetcontroller.quantity,
-                                  textname: "Enter Updated Quantity",
-                                  hintText: 'Enter Updated Quantity',
-                                  isPasswordField: false,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Select Location',
+                                            style: TextStyle(
+                                                // fontFamily: 'gilroy',
+                                                fontSize: screenheight(context,
+                                                    dividedby: 50),
+                                                color: lablecolor,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        // padding: const EdgeInsets.all(5.0),
+                                        child: locationController
+                                                .weblocation.data!.isEmpty
+                                            ? Container(
+                                                alignment: Alignment.centerLeft,
+                                                height: screenheight(context,
+                                                    dividedby: 20),
+                                                // width: screenwidth(context, dividedby: 1),
+                                                decoration: BoxDecoration(
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors
+                                                            .grey.shade600
+                                                            .withOpacity(0.5),
+                                                        blurRadius: 2,
+                                                        spreadRadius: 0.2,
+                                                        offset:
+                                                            const Offset(1, 1)),
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                  color: Colors.white,
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 20),
+                                                  child: Text(
+                                                    'No Location',
+                                                    style: TextStyle(
+                                                        fontSize: screenheight(
+                                                            context,
+                                                            dividedby: 45),
+                                                        fontFamily:
+                                                            'gilroy.bold',
+                                                        color: Colors
+                                                            .grey.shade400),
+                                                  ),
+                                                ),
+                                              )
+                                            : CustomDropDown(
+                                                result: locationController
+                                                    .weblocation.data!,
+                                                onSelection: (var value) {
+                                                  procontroller.locationid =
+                                                      value.toString();
+                                                  print(value.toString());
+                                                },
+                                              ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                // CommonTextFieldCrete(
+                                //   // validation: (value) {
+                                //   //   if (value!.isEmpty) {
+                                //   //     return 'Please enter quantity';
+                                //   //   }
+                                //   //   return null;
+                                //   // },
+                                //   controller: assetcontroller.quantity,
+                                //   countertext: "1",
+                                //   textname: "Enter Updated Quantity",
+                                //   hintText: 'Enter Updated Quantity',
+                                //   isPasswordField: false,
+                                // ),
                                 CommonTextFieldCrete(
                                   // validation: (value) {
                                   //   if (value!.isEmpty) {
@@ -254,28 +460,38 @@ class _AssetScreenState extends State<AssetScreen> {
                                     ],
                                   ),
                                 ),
-                                profilepic != null
-                                    ? Row(
-                                        children: [
-                                          Card(
-                                              elevation: 3,
-                                              child: Container(
-                                                height: 100,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: FileImage(
-                                                            profilepic!))),
-                                              )),
-                                          IconButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  profilepic = null;
-                                                });
-                                              },
-                                              icon: const Icon(Icons.clear))
-                                        ],
+                                profilepic.length != 0
+                                    ? Container(
+                                        height: 100,
+                                        child: ListView.builder(
+                                          itemCount: profilepic.length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) => Row(
+                                            children: [
+                                              Card(
+                                                  elevation: 3,
+                                                  child: Container(
+                                                    height: 100,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                            fit: BoxFit.cover,
+                                                            image: FileImage(
+                                                                File(profilepic[
+                                                                        index]
+                                                                    .path)))),
+                                                  )),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      profilepic
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+                                                  icon: const Icon(Icons.clear))
+                                            ],
+                                          ),
+                                        ),
                                       )
                                     : const SizedBox.shrink(),
                                 const SizedBox(
@@ -286,7 +502,9 @@ class _AssetScreenState extends State<AssetScreen> {
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         await assetcontroller.updatequantity(
-                                          assetid: product.id.toString(),
+                                            locationid:
+                                                procontroller.locationid,
+                                            assetid: product.id.toString(),
                                             photo: profilepic);
                                       }
                                     }),

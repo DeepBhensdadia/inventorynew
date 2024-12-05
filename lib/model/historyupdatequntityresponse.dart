@@ -58,6 +58,8 @@ class HistoryProduct {
   String? uom;
   String? availableQuantity;
   int? status;
+  int? isEdited;
+  int? updateStatus;
 
   HistoryProduct({
     this.id,
@@ -85,6 +87,8 @@ class HistoryProduct {
     this.uom,
     this.availableQuantity,
     this.status,
+    this.isEdited,
+    this.updateStatus,
   });
 
   factory HistoryProduct.fromJson(Map<String, dynamic> json) => HistoryProduct(
@@ -113,6 +117,8 @@ class HistoryProduct {
     uom: json["uom"],
     availableQuantity: json["available_quantity"],
     status: json["status"],
+    isEdited: json["is_edited"],
+    updateStatus: json["update_status"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -141,5 +147,7 @@ class HistoryProduct {
     "uom": uom,
     "available_quantity": availableQuantity,
     "status": status,
+    "is_edited": isEdited,
+    "update_status": updateStatus,
   };
 }

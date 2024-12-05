@@ -6,10 +6,14 @@ export '../../widgets/helper.dart';
 
 class CustomDropDown extends StatefulWidget {
   const CustomDropDown(
-      {Key? key, required this.result, required this.onSelection})
+      {Key? key,
+      required this.result,
+      required this.onSelection,
+      this.initialid})
       : super(key: key);
 
   final List<Datum> result;
+  final String? initialid;
   final void Function(String?) onSelection;
   @override
   State<CustomDropDown> createState() => _CustomDropDownState();
@@ -19,8 +23,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
   @override
   void initState() {
     // TODO: implement initState
-    valueNotifier =
-        ValueNotifier<String>(widget.result.first.id.toString() ?? "");
+    valueNotifier = ValueNotifier<String>(widget.initialid != null
+        ? widget.initialid ?? ""
+        : widget.result.first.id.toString() ?? "");
     super.initState();
   }
 

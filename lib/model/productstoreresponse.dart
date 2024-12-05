@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-Productstoreresponsemodel productstoreresponsemodelFromJson(String str) => Productstoreresponsemodel.fromJson(json.decode(str));
+Productstoreresponsemodel productstoreresponsemodelFromJson(String str) =>
+    Productstoreresponsemodel.fromJson(json.decode(str));
 
-String productstoreresponsemodelToJson(Productstoreresponsemodel data) => json.encode(data.toJson());
+String productstoreresponsemodelToJson(Productstoreresponsemodel data) =>
+    json.encode(data.toJson());
 
 class Productstoreresponsemodel {
   bool? success;
@@ -17,13 +19,14 @@ class Productstoreresponsemodel {
     this.message,
   });
 
-  factory Productstoreresponsemodel.fromJson(Map<String, dynamic> json) => Productstoreresponsemodel(
-    success: json["success"],
-    message: json["message"] != "Saved Successfully" ? "The product code has already been taken." : json["message"],
-  );
+  factory Productstoreresponsemodel.fromJson(Map<String, dynamic> json) =>
+      Productstoreresponsemodel(
+        success: json["success"],
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "success": success,
-    "message": message,
-  };
+        "success": success,
+        "message": message,
+      };
 }

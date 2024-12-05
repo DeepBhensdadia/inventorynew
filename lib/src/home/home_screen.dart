@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:inventory/getxcontroller/updatedhistorycontroller.dart';
 import 'package:inventory/inventory.dart';
 import 'package:inventory/scannerdesignation/productsscreen.dart';
@@ -19,23 +21,42 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     // logincontroller.logincheck();
-    if (locationController.weblocation.data!.isNotEmpty) {
-      procontroller.locationid =
-          locationController.weblocation.data?.first.id.toString() ?? "";
-    }
     super.initState();
   }
 
-  LocatioController locationController = Get.put(LocatioController());
   LoginController logincontroller = Get.put(LoginController());
   ProductController procontroller = Get.put(ProductController());
+  ProductControllerwithQr controllerqrwork = Get.put(ProductControllerwithQr());
   ProductUpdatedHistoryController historycontroller =
       Get.put(ProductUpdatedHistoryController());
   final _formKey = GlobalKey<FormState>();
-FocusNode focusNode = FocusNode();
+  FocusNode focusNode = FocusNode();
+
+  String barcodeResult = '';
+
+  Future<void> scanBarcode() async {
+    String barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
+      '#A44D80', // Custom color
+      'Cancel',
+      false,
+      ScanMode.DEFAULT,
+    );
+
+    setState(() {
+      barcodeResult = barcodeScanResult;
+    });
+
+    if (barcodeResult != "-1") {
+      print("ksjdbvshfmnvbsjm, fbv$barcodeResult");
+      controllerqrwork.detailsscreen(barcodeResult);
+      // Get.back();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     context.loaderOverlay.hide();
@@ -50,9 +71,68 @@ FocusNode focusNode = FocusNode();
           actions: [
             IconButton(
                 onPressed: () {
-                  SharedPref.deleteAll();
-                  Get.deleteAll();
-                  Get.offAll(() => const LoginScreen());
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Confirm Logout",
+                          style: TextStyle(fontSize: 25, color: Colors.red)),
+                      content: Text('Are you sure you want to logout?'),
+                      actions: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: lablecolor,
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
+                            // gradient: LinearGradient(
+                            //   colors: [
+                            //     Color(0xffA44D80),
+                            //     Color(0xff75689E),
+                            //   ],
+                            // ),
+                          ),
+                          child: CupertinoButton(
+                            minSize: 35,
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: lablecolor,
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
+                            // gradient: LinearGradient(
+                            //   colors: [
+                            //     Color(0xffA44D80),
+                            //     Color(0xff75689E),
+                            //   ],
+                            // ),
+                          ),
+                          child: CupertinoButton(
+                            minSize: 35,
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            onPressed: () {
+                              SharedPref.deleteAll();
+                              Get.deleteAll();
+                              Get.offAll(() => const LoginScreen());
+                            },
+                            child: Text(
+                              "Logout",
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 icon: const Icon(Icons.logout)),
             // IconButton(
@@ -112,7 +192,10 @@ FocusNode focusNode = FocusNode();
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Text( saveUser()?.data?.roleDesignation == "2" ? "Auditor" : "Admin",
+                            Text(
+                                saveUser()?.data?.roleDesignation == "2"
+                                    ? "Auditor"
+                                    : "Admin",
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
                             // Text("${saveUser()?.data?.email}" ?? "",
@@ -228,64 +311,8 @@ FocusNode focusNode = FocusNode();
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Select Location',
-                                style: TextStyle(
-                                    // fontFamily: 'gilroy',
-                                    fontSize:
-                                        screenheight(context, dividedby: 50),
-                                    color: lablecolor,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            // padding: const EdgeInsets.all(5.0),
-                            child: locationController.weblocation.data!.isEmpty
-                                ? Container(
-                                    alignment: Alignment.centerLeft,
-                                    height:
-                                        screenheight(context, dividedby: 20),
-                                    // width: screenwidth(context, dividedby: 1),
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.grey.shade600
-                                                .withOpacity(0.5),
-                                            blurRadius: 2,
-                                            spreadRadius: 0.2,
-                                            offset: const Offset(1, 1)),
-                                      ],
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Colors.white,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Text(
-                                        'No Location',
-                                        style: TextStyle(
-                                            fontSize: screenheight(context,
-                                                dividedby: 45),
-                                            fontFamily: 'gilroy.bold',
-                                            color: Colors.grey.shade400),
-                                      ),
-                                    ),
-                                  )
-                                : CustomDropDown(
-                                    result:
-                                        locationController.weblocation.data!,
-                                    onSelection: (var value) {
-                                      procontroller.locationid = value.toString();
-                                      print(value.toString());
-                                    },
-                                  ),
-                          ),
+
+
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -337,9 +364,7 @@ FocusNode focusNode = FocusNode();
                             CustomButton(
                                 colorsname: purple,
                                 name: 'Scan QR',
-                                onPressed: () async {
-                                  Get.to(const ScannerScreen());
-                                }),
+                                onPressed: () => scanBarcode()),
                             Divider(
                               thickness: 2,
                               height: 40,
@@ -349,6 +374,7 @@ FocusNode focusNode = FocusNode();
                                 name: 'History',
                                 onPressed: () async {
                                   await historycontroller.historyapi();
+                                  Get.to(HistoryScreen());
                                 }),
                           ],
                         ),

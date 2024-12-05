@@ -15,16 +15,16 @@ class ProductController extends GetxController {
         .productdetailsapi(
             locationid: locationid, productcode: assetnumber.text)
         .then((value) {
-      if (value.data!.isNotEmpty) {
+      if(value.success == false){
+        Fluttertoast.showToast(msg: value.message ?? '');
+      }else {
         assetDetails = value;
         print(jsonEncode(value));
         Get.to(const AssetScreen());
         assetnumber.clear();
-        Get.context!.loaderOverlay.hide();
-      } else {
-        Fluttertoast.showToast(msg: "Data is not available..");
-        Get.context!.loaderOverlay.hide();
       }
+        Get.context!.loaderOverlay.hide();
+
     }).onError((error, stackTrace) {
       Get.context!.loaderOverlay.hide();
       print(error);
@@ -39,15 +39,15 @@ class ProductControllerwithQr extends GetxController {
         .productdetailswithQrapi(
             locationid: productController.locationid, productcode: qrdata)
         .then((value) {
-      if (value.data!.isNotEmpty) {
-        productController.assetDetails = value;
-        print(jsonEncode(value));
-        Get.to(const AssetScreen());
+if(value.success == false){
+  Fluttertoast.showToast(msg: value.message ?? '');
+}else {
+  productController.assetDetails = value;
+  print(jsonEncode(value));
+  Get.to(const AssetScreen());
+}
         Get.context!.loaderOverlay.hide();
-      } else {
-        Fluttertoast.showToast(msg: "Data is not available..");
-        Get.context!.loaderOverlay.hide();
-      }
+
     }).onError((error, stackTrace) {
       print(error);
     });

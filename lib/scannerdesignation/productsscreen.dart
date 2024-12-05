@@ -6,6 +6,8 @@ import 'package:inventory/scannerdesignation/createproduct.dart';
 import 'package:inventory/src/storecode/store_code_screen.dart';
 import 'package:inventory/widgets/custom_dropdown.dart';
 
+import 'createproductslist.dart';
+
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
 
@@ -27,7 +29,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   LocatioController locationController = Get.put(LocatioController());
   CreateProductListController productListController =
       Get.put(CreateProductListController());
-
+  String locationname = "";
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -288,13 +290,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 7),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 7),
                     child: Card(
                       shape: boarderad,
                       elevation: 3,
                       child: Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: EdgeInsets.all(15.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -326,11 +328,24 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 15),
+                            SizedBox(height: 15),
                             CustomButton(
                                 name: 'Create Product',
                                 onPressed: () async {
-                                  Get.to(const CreateProduct());
+                                  if (locationController
+                                      .weblocation.data!.isEmpty) {
+                                    Get.to(const CreateProduct());
+                                  } else {
+                                    for (var element in locationController
+                                        .weblocation.data!) {
+                                      if (id.locationid ==
+                                          element.id.toString()) {
+                                        Get.to(CreateProduct(
+                                            locationname:
+                                                element.locationName));
+                                      }
+                                    }
+                                  }
                                 }),
                             Divider(
                               thickness: 2,
@@ -343,6 +358,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 onPressed: () async {
                                   await productListController
                                       .createproducthistoryapi();
+                                  Get.to(CreatesProductListScreen());
                                 }),
                           ],
                         ),

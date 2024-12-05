@@ -1,21 +1,13 @@
-import 'dart:convert';
-
-import 'package:get/get.dart';
 import 'package:inventory/inventory.dart';
-import 'package:inventory/model/historyupdatequntityresponse.dart';
-import 'package:inventory/scannerdesignation/createproductslist.dart';
-import 'package:inventory/web_service/web_repository.dart';
-
 import '../model/createproductslistmodel.dart';
 
 class CreateProductListController extends GetxController {
-  late Createproducthistoryresponsemodel products;
+  Rx<Createproducthistoryresponsemodel> products = Createproducthistoryresponsemodel().obs;
   createproducthistoryapi() async {
     Get.context!.loaderOverlay.show();
     await WebRepository().createproducthistory().then((value) {
       if (value.data!.isNotEmpty) {
-        products = value;
-        Get.to(CreatesProductListScreen());
+        products.value = value;
       } else {
         Fluttertoast.showToast(msg: "Data is not available..");
       }

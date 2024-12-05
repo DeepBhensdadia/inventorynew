@@ -4,14 +4,16 @@
 
 import 'dart:convert';
 
-Productsdetails productsdetailsFromJson(String str) => Productsdetails.fromJson(json.decode(str));
+Productsdetails productsdetailsFromJson(String str) =>
+    Productsdetails.fromJson(json.decode(str));
 
-String productsdetailsToJson(Productsdetails data) => json.encode(data.toJson());
+String productsdetailsToJson(Productsdetails data) =>
+    json.encode(data.toJson());
 
 class Productsdetails {
   bool? success;
   String? message;
-  List<Product>? data;
+  Product? data;
 
   Productsdetails({
     this.success,
@@ -19,17 +21,18 @@ class Productsdetails {
     this.data,
   });
 
-  factory Productsdetails.fromJson(Map<String, dynamic> json) => Productsdetails(
-    success: json["success"],
-    message: json["message"],
-    data: List<Product>.from(json["data"].map((x) => Product.fromJson(x))),
-  );
+  factory Productsdetails.fromJson(Map<String, dynamic> json) =>
+      Productsdetails(
+        success: json["success"],
+        message: json["message"],
+        data:json["data"] == null ? null : Product.fromJson(json["data"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "success": success,
-    "message": message,
-    "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-  };
+        "success": success,
+        "message": message,
+        "data": data?.toJson(),
+      };
 }
 
 class Product {
@@ -43,6 +46,8 @@ class Product {
   String? itemCode;
   String? productCode;
   String? asset;
+  dynamic assetno;
+  String? serial;
   String? photo;
   String? remark;
   String? mainCategory;
@@ -54,6 +59,7 @@ class Product {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? updateStatus;
+  List<String>? photos;
 
   Product({
     this.id,
@@ -66,6 +72,8 @@ class Product {
     this.itemCode,
     this.productCode,
     this.asset,
+    this.assetno,
+    this.serial,
     this.photo,
     this.remark,
     this.mainCategory,
@@ -77,53 +85,62 @@ class Product {
     this.createdAt,
     this.updatedAt,
     this.updateStatus,
+    this.photos,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-    id: json["id"],
-    userId: json["user_id"],
-    companyId: json["company_id"],
-    sheetNumber: json["sheet_number"],
-    productDate: json["product_date"],
-    location: json["location"],
-    subLocation: json["sub_location"],
-    itemCode: json["item_code"],
-    productCode: json["product_code"],
-    asset: json["asset"],
-    photo: json["photo"],
-    remark: json["remark"],
-    mainCategory: json["main_category"],
-    category: json["category"],
-    quantity: json["quantity"],
-    uom: json["uom"],
-    availableQuantity: json["available_quantity"],
-    status: json["status"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
-    updateStatus: json["update_status"],
-  );
+        id: json["id"],
+        userId: json["user_id"],
+        companyId: json["company_id"],
+        sheetNumber: json["sheet_number"],
+        productDate: json["product_date"],
+        location: json["location_name"],
+        subLocation: json["sub_location"],
+        itemCode: json["item_code"],
+        productCode: json["product_code"],
+        asset: json["asset"],
+        assetno: json["asset_no"],
+        serial: json["serial"],
+        photo: json["photo"],
+        remark: json["remark"],
+        mainCategory: json["main_category"],
+        category: json["category"],
+        quantity: json["quantity"],
+        uom: json["uom"],
+        availableQuantity: json["available_quantity"],
+        status: json["status"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        updateStatus: json["update_status"],
+        photos: json["photos"] == null
+            ? []
+            : List<String>.from(json["photos"].map((x) => x)),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "user_id": userId,
-    "company_id": companyId,
-    "sheet_number": sheetNumber,
-    "product_date": productDate,
-    "location": location,
-    "sub_location": subLocation,
-    "item_code": itemCode,
-    "product_code": productCode,
-    "asset": asset,
-    "photo": photo,
-    "remark": remark,
-    "main_category": mainCategory,
-    "category": category,
-    "quantity": quantity,
-    "uom": uom,
-    "available_quantity": availableQuantity,
-    "status": status,
-    "created_at": createdAt!.toIso8601String(),
-    "updated_at": updatedAt!.toIso8601String(),
-    "update_status": updateStatus,
-  };
+        "id": id,
+        "user_id": userId,
+        "company_id": companyId,
+        "sheet_number": sheetNumber,
+        "product_date": productDate,
+        "location_name": location,
+        "sub_location": subLocation,
+        "item_code": itemCode,
+        "product_code": productCode,
+        "asset": asset,
+        "asset_no": assetno,
+        "serial": serial,
+        "photo": photo,
+        "remark": remark,
+        "main_category": mainCategory,
+        "category": category,
+        "quantity": quantity,
+        "uom": uom,
+        "available_quantity": availableQuantity,
+        "status": status,
+        "created_at": createdAt!.toIso8601String(),
+        "updated_at": updatedAt!.toIso8601String(),
+        "update_status": updateStatus,
+        "photos": List<dynamic>.from(photos!.map((x) => x)),
+      };
 }
