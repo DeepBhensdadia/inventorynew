@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         smartManagement: SmartManagement.onlyBuilder,
         debugShowCheckedModeBanner: false,
-        title: 'Inventory App',
+        title: 'Fix Assets App',
         // getPages: getPages,
         // initialRoute: Routes.splash,
         theme: ThemeData(

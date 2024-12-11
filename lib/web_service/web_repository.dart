@@ -75,7 +75,7 @@ class WebRepository {
         '$baseurl/ProductbyQrcode?company_id=${comapnydetails()?.data?.id}&product_code=$productcode';
     return http
         .get(
-      Uri.  parse(url),
+      Uri.parse(url),
     )
         .then((http.Response response) {
       return productsdetailsFromJson(response.body);
