@@ -12,6 +12,8 @@ import 'package:inventory/model/productdetailsmodel.dart';
 import 'package:inventory/model/login_model.dart';
 import 'package:inventory/model/productstoreresponse.dart';
 import '../model/historyupdatequntityresponse.dart';
+import '../model/pdfidmodel.dart';
+import '../model/statustypelistmodel.dart';
 
 // const String maindn = "http://192.168.29.199:8005";
 const String maindn = "https://tagmyassets.com/ivapp/public";
@@ -49,6 +51,17 @@ class WebRepository {
     )
         .then((http.Response response) {
       return locationlistcompanyFromJson(response.body);
+    });
+  }
+
+  Future<PdfIdModel> getpdfiddata() {
+    String url = "$baseurl/savePdf/${saveUser()?.data?.id}";
+    return http
+        .get(
+      Uri.parse(url),
+    )
+        .then((http.Response response) {
+      return pdfIdModelFromJson(response.body);
     });
   }
 
@@ -115,6 +128,17 @@ class WebRepository {
         .post(Uri.parse(url), body: parameter)
         .then((http.Response response) {
       return assetresponsemodelFromJson(response.body);
+    });
+  }
+
+  Future<StatusTypeListModel> statusTypeList() {
+    String url = '$baseurl/status_types';
+    return http
+        .get(
+      Uri.parse(url),
+    )
+        .then((http.Response response) {
+      return statusTypeListModelFromJson(response.body);
     });
   }
 

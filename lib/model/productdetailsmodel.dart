@@ -25,7 +25,7 @@ class Productsdetails {
       Productsdetails(
         success: json["success"],
         message: json["message"],
-        data:json["data"] == null ? null : Product.fromJson(json["data"]),
+        data: json["data"] == null ? null : Product.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -60,6 +60,7 @@ class Product {
   DateTime? updatedAt;
   int? updateStatus;
   List<String>? photos;
+  Locations? locations;
 
   Product({
     this.id,
@@ -86,6 +87,7 @@ class Product {
     this.updatedAt,
     this.updateStatus,
     this.photos,
+    this.locations,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -115,6 +117,7 @@ class Product {
         photos: json["photos"] == null
             ? []
             : List<String>.from(json["photos"].map((x) => x)),
+    locations:json["locations"] == null ? null : Locations.fromJson(json["locations"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -142,5 +145,46 @@ class Product {
         "updated_at": updatedAt!.toIso8601String(),
         "update_status": updateStatus,
         "photos": List<dynamic>.from(photos!.map((x) => x)),
+    "locations": locations?.toJson(),
       };
+}
+
+class Locations {
+  int? id;
+  int? companyId;
+  String? locationCode;
+  String? locationName;
+  int? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  Locations({
+    this.id,
+    this.companyId,
+    this.locationCode,
+    this.locationName,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory Locations.fromJson(Map<String, dynamic> json) => Locations(
+    id: json["id"],
+    companyId: json["company_id"],
+    locationCode: json["location_code"],
+    locationName: json["location_name"],
+    status: json["status"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "company_id": companyId,
+    "location_code": locationCode,
+    "location_name": locationName,
+    "status": status,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+  };
 }

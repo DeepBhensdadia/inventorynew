@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -77,6 +77,28 @@ class LoginController extends GetxController {
             value: jsonEncode(login.toJson()), prefKey: PrefKey.loginDetails);
       }
     }).onError((error, stackTrace) {
+      print("error...$error");
+    });
+  }
+
+  Future<void> _openPdf(pdfUrl) async {
+    Uri url = Uri.parse(pdfUrl);
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
+
+  Future<void> pdfurlcheck() async {
+    Get.context?.loaderOverlay.show();
+    await repository.getpdfiddata().then((login) async {
+      Fluttertoast.showToast(msg: login.message.toString());
+      if (login.filePath != null) {
+        _openPdf(login.filePath);
+      } else {
+        Fluttertoast.showToast(msg: "Authorise Latter Not Found");
+      }
+      Get.context?.loaderOverlay.hide();
+    }).onError((error, stackTrace) {
+      Get.context?.loaderOverlay.hide();
+      Fluttertoast.showToast(msg: "error...$error");
       print("error...$error");
     });
   }

@@ -64,7 +64,6 @@ class _AssetScreenState extends State<AssetScreen> {
     }
   }
 
-  ProductController homeController = Get.put(ProductController());
   AssetsUpdateController assetcontroller = Get.put(AssetsUpdateController());
   LocatioController locationController = Get.put(LocatioController());
   ProductController procontroller = Get.put(ProductController());
@@ -73,19 +72,17 @@ class _AssetScreenState extends State<AssetScreen> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
+    assetcontroller.getCurrentLocation();
+    locationController.statustypelistapi();
     assetcontroller.quantity.clear();
     assetcontroller.commet.clear();
-    if (locationController.weblocation.data!.isNotEmpty) {
-      procontroller.locationid =
-          locationController.weblocation.data?.first.id.toString() ?? "";
-    }
     // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Product? product = homeController.assetDetails.data;
+    Product? product = procontroller.assetDetails.data;
     return SafeArea(
       child: Scaffold(
           // resizeToAvoidBottomInset: false,
@@ -121,10 +118,9 @@ class _AssetScreenState extends State<AssetScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CachedNetworkImage(
-                                imageUrl: product!.photos?.length == 0
+                                imageUrl: (product?.photos?.length ?? 0) == 0
                                     ? "$baseurlimage/default.png"
-                                    : baseurlimage +
-                                        (product.photos?[0].toString() ?? ""),
+                                    : (product?.photos?.first.toString() ?? ""),
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                   height: 80,
@@ -160,7 +156,8 @@ class _AssetScreenState extends State<AssetScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Asset No :  ${product.assetno ?? ""}",
+                                    Text(
+                                        "Asset No :  ${product?.assetno ?? ""}",
                                         maxLines: 5,
                                         style: const TextStyle(
                                             fontSize: 16,
@@ -169,7 +166,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text("${product.asset}",
+                                    Text(product?.asset ?? "",
                                         style: TextStyle(
                                             // overflow: TextOverflow.ellipsis,
                                             fontSize: screenwidth(context,
@@ -179,7 +176,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                       height: 5,
                                     ),
                                     Text(
-                                      "Category :  ${product.category ?? ""}",
+                                      "Category :  ${product?.category ?? ""}",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         color: subtitle,
@@ -189,7 +186,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                       height: 5,
                                     ),
                                     Text(
-                                      "Location:  ${product.location ?? ""}",
+                                      "Location:  ${product?.location ?? ""}",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         color: subtitle,
@@ -199,7 +196,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                       height: 5,
                                     ),
                                     Text(
-                                      "Sub Location:  ${product.subLocation ?? ""}",
+                                      "Sub Location:  ${product?.subLocation ?? ""}",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         color: subtitle,
@@ -209,7 +206,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                       height: 5,
                                     ),
                                     Text(
-                                      "Serial No:  ${product.serial ?? ""}",
+                                      "Serial No:  ${product?.serial ?? ""}",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         color: subtitle,
@@ -225,7 +222,7 @@ class _AssetScreenState extends State<AssetScreen> {
                           //   height: 50,
                           // ),
                           // Text(
-                          //   "Available Quantity : ${product.quantity}",
+                          //   "Available Quantity : ${product?.quantity}",
                           //   style: const TextStyle(
                           //       fontSize: 20,
                           //       color: lablecolor,
@@ -235,8 +232,8 @@ class _AssetScreenState extends State<AssetScreen> {
                       ),
                     ),
                   ),
-                  product.updateStatus == 1
-                      ? (product.photos?.length ?? 0) > 1
+                  product?.updateStatus == 1
+                      ? (product?.photos?.length ?? 0) > 1
                           ? Card(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 20),
@@ -261,7 +258,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                     Container(
                                       height: 100,
                                       child: ListView.builder(
-                                        itemCount: product.photos?.length,
+                                        itemCount: product?.photos?.length,
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (context, index) =>
                                             Container(
@@ -269,7 +266,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                               horizontal: 10),
                                           child: CachedNetworkImage(
                                             imageUrl: baseurlimage +
-                                                (product.photos?[index]
+                                                (product?.photos?[index]
                                                         .toString() ??
                                                     ""),
                                             imageBuilder:
@@ -372,7 +369,7 @@ class _AssetScreenState extends State<AssetScreen> {
                                                 ),
                                                 child: Padding(
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 20),
                                                   child: Text(
                                                     'No Location',
@@ -388,6 +385,8 @@ class _AssetScreenState extends State<AssetScreen> {
                                                 ),
                                               )
                                             : CustomDropDown(
+                                                initialid:
+                                                    procontroller.locationid == "" ? null :procontroller.locationid,
                                                 result: locationController
                                                     .weblocation.data!,
                                                 onSelection: (var value) {
@@ -397,6 +396,150 @@ class _AssetScreenState extends State<AssetScreen> {
                                                 },
                                               ),
                                       ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Select Status',
+                                            style: TextStyle(
+                                                // fontFamily: 'gilroy',
+                                                fontSize: screenheight(context,
+                                                    dividedby: 50),
+                                                color: lablecolor,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Obx(
+                                        () => Container(
+                                            // padding: const EdgeInsets.all(5.0),
+                                            child: locationController
+                                                    .statustypelist.isEmpty
+                                                ? Container(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    height: screenheight(
+                                                        context,
+                                                        dividedby: 20),
+                                                    // width: screenwidth(context, dividedby: 1),
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: Colors
+                                                                .grey.shade600
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            blurRadius: 2,
+                                                            spreadRadius: 0.2,
+                                                            offset:
+                                                                const Offset(
+                                                                    1, 1)),
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                      color: Colors.white,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 20),
+                                                      child: Text(
+                                                        'No Location',
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                screenheight(
+                                                                    context,
+                                                                    dividedby:
+                                                                        45),
+                                                            fontFamily:
+                                                                'gilroy.bold',
+                                                            color: Colors
+                                                                .grey.shade400),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: Colors
+                                                                .grey.shade600
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            blurRadius: 2,
+                                                            spreadRadius: 0.2,
+                                                            offset:
+                                                                const Offset(
+                                                                    1, 1)),
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      color: Colors.white,
+                                                    ),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 10),
+                                                      child: DropdownButton<
+                                                          String>(
+                                                        hint: Text(
+                                                            "Select Status"),
+                                                        isExpanded: true,
+                                                        underline: Container(),
+                                                        value: assetcontroller
+                                                                .statustype
+                                                                .text
+                                                                .isEmpty
+                                                            ? null
+                                                            : assetcontroller
+                                                                .statustype
+                                                                .text,
+                                                        items: locationController
+                                                            .statustypelist
+                                                            .map<
+                                                                DropdownMenuItem<
+                                                                    String>>(
+                                                              (element) =>
+                                                                  DropdownMenuItem<
+                                                                      String>(
+                                                                value: element
+                                                                    .id
+                                                                    .toString(),
+                                                                child: Text(
+                                                                    '${element.name}'),
+                                                              ),
+                                                            )
+                                                            .toList(),
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            assetcontroller
+                                                                    .statustype
+                                                                    .text =
+                                                                value ?? "";
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                  )),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -504,7 +647,8 @@ class _AssetScreenState extends State<AssetScreen> {
                                         await assetcontroller.updatequantity(
                                             locationid:
                                                 procontroller.locationid,
-                                            assetid: product.id.toString(),
+                                            assetid:
+                                                product?.id.toString() ?? '',
                                             photo: profilepic);
                                       }
                                     }),
@@ -515,6 +659,23 @@ class _AssetScreenState extends State<AssetScreen> {
                             ),
                           ),
                         ),
+                  Obx(
+                    () => Card(
+                      margin: const EdgeInsets.all(20),
+                      shape: boarderad,
+                      elevation: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: ListTile(
+                          title: Text(
+                            assetcontroller.placeName.value,
+                          ),
+                          subtitle: Text(
+                              "Latitude:${assetcontroller.position?.latitude}  Longitude:${assetcontroller.position?.longitude}"),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

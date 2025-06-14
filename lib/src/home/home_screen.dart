@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:inventory/getxcontroller/updatedhistorycontroller.dart';
 import 'package:inventory/inventory.dart';
 import 'package:inventory/scannerdesignation/productsscreen.dart';
 import 'package:inventory/src/Asset/asset_screen.dart';
+import 'package:inventory/src/home/barcodescanner.dart';
 import 'package:inventory/src/storecode/store_code_screen.dart';
 import 'package:inventory/widgets/customforcreate.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../drawer/drawer.dart';
 import '../../widgets/custom_dropdown.dart';
 import 'package:inventory/getxcontroller/locationcontroller.dart';
@@ -24,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // logincontroller.logincheck();
+    logincontroller.logincheck();
     super.initState();
   }
 
@@ -35,25 +40,92 @@ class _HomeScreenState extends State<HomeScreen> {
       Get.put(ProductUpdatedHistoryController());
   final _formKey = GlobalKey<FormState>();
   FocusNode focusNode = FocusNode();
-
   String barcodeResult = '';
 
-  Future<void> scanBarcode() async {
-    String barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
-      '#A44D80', // Custom color
-      'Cancel',
-      false,
-      ScanMode.DEFAULT,
+  Future<void> scanBarcode(BuildContext context) async {
+    // String qrcode = await Get.to(BarcodeScannerScreen());
+    String? res = await SimpleBarcodeScanner.scanBarcode(
+      context,
+      barcodeAppBar: const BarcodeAppBar(
+        enableBackButton: true,
+        backButtonIcon: Icon(Icons.arrow_back_ios),
+      ),
+
+      isShowFlashIcon: true,
+      cameraFace: CameraFace.back,
     );
+    if(res != "-1") {
+      controllerqrwork.detailsscreen(res ?? "");
+    }
+  }
 
-    setState(() {
-      barcodeResult = barcodeScanResult;
-    });
+  final ImagePicker _picker = ImagePicker();
+  List<String> data = [];
 
-    if (barcodeResult != "-1") {
-      print("ksjdbvshfmnvbsjm, fbv$barcodeResult");
-      controllerqrwork.detailsscreen(barcodeResult);
-      // Get.back();
+  Future<void> _pickAndProcessImage() async {
+    try {
+      final XFile? pickedImage =
+          await _picker.pickImage(source: ImageSource.camera);
+      if (pickedImage == null) return;
+
+      print('Picked Image Path: ${pickedImage.path}');
+
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedImage.path,
+        // aspectRatioPresets: [
+        //   CropAspectRatioPreset.square,
+        //   CropAspectRatioPreset.ratio3x2,
+        //   CropAspectRatioPreset.original,
+        //   CropAspectRatioPreset.ratio4x3,
+        //   CropAspectRatioPreset.ratio16x9,
+        // ],
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Crop Image',
+            toolbarColor: purple,
+            toolbarWidgetColor: Colors.white,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: 'Crop Image',
+          ),
+        ],
+      );
+
+      if (croppedFile == null) return;
+
+      // Debug: Log cropped image path
+      print('Cropped Image Path: ${croppedFile.path}');
+
+      final inputImage = InputImage.fromFilePath(croppedFile.path);
+      final textRecognizer = TextRecognizer();
+
+      final RecognizedText recognizedText =
+          await textRecognizer.processImage(inputImage);
+
+      // data = recognizedText.text.split('\n');
+
+      final regex = RegExp(r'[A-Z]{2}\d{2}[A-Z]{2}\d{4}');
+      final matches = regex.allMatches(recognizedText.text);
+      final results = matches.map((match) => match.group(0)).toList();
+      if (results.isNotEmpty) {
+        controllerqrwork.detailsscreen(results.join('\n'));
+      } else {
+        Fluttertoast.showToast(msg: "Number Plate Not Found Please Try Again.");
+      }
+
+      // setState(() {
+      //   _recognizedText = recognizedText.text.isNotEmpty
+      //       ? recognizedText.text
+      //       : "No text found in the image.";
+      // });
+
+      // Close the text recognizer
+      textRecognizer.close();
+    } catch (e) {
+      print("Error occurred: $e");
+      Fluttertoast.showToast(msg: "Error occurred: $e");
+      print('Error: $e');
     }
   }
 
@@ -178,7 +250,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ListTile(
-                        onTap: () {},
                         leading: CircleAvatar(
                             child: const Center(
                               child: Icon(Icons.person,
@@ -203,6 +274,31 @@ class _HomeScreenState extends State<HomeScreen> {
                             //         fontSize: 14, fontWeight: FontWeight.w500)),
                           ],
                         ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Card(
+                    shape: boarderad,
+                    elevation: 3,
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ListTile(
+                        visualDensity: VisualDensity.compact,
+                        onTap: () {
+                          logincontroller.pdfurlcheck();
+                        },
+                        title: Text("AUTHORIZATION LETTER",
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500)),
+                        trailing: Text("VIEW",
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: lablecolor)),
                       ),
                     ),
                   ),
@@ -312,7 +408,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
 
-
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -361,10 +456,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 40,
                               color: Colors.grey.shade300,
                             ),
-                            CustomButton(
-                                colorsname: purple,
-                                name: 'Scan QR',
-                                onPressed: () => scanBarcode()),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomButton(
+                                      colorsname: purple,
+                                      name: 'Scan QR',
+                                      onPressed: () => scanBarcode(context)),
+                                ),
+                                Expanded(
+                                  child: CustomButton(
+                                      colorsname: purple,
+                                      name: 'Number Plate',
+                                      onPressed: () => _pickAndProcessImage()),
+                                ),
+                              ],
+                            ),
                             Divider(
                               thickness: 2,
                               height: 40,

@@ -16,11 +16,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlobalLoaderOverlay(
-      overlayOpacity: .9,
       overlayColor: Colors.grey.withOpacity(0.2),
       useDefaultLoading: false,
-      overlayWidget: Center(
-          child: LoadingAnimationWidget.inkDrop(color: purple, size: 40)),
+      overlayWidgetBuilder: (progress) {
+        return Center(
+            child: LoadingAnimationWidget.inkDrop(color: purple, size: 40));
+      },
       child: GetMaterialApp(
         smartManagement: SmartManagement.onlyBuilder,
         debugShowCheckedModeBanner: false,
@@ -28,9 +29,19 @@ class MyApp extends StatelessWidget {
         // getPages: getPages,
         // initialRoute: Routes.splash,
         theme: ThemeData(
-          scaffoldBackgroundColor: Colors.grey.shade200,
-          primarySwatch: Colors.blue,
-        ),
+            scaffoldBackgroundColor: Colors.grey.shade200,
+            primarySwatch: Colors.blue,
+            cardTheme: CardTheme(
+              color: Colors.white,
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+                    iconColor: WidgetStateColor.resolveWith(
+                      (states) => Colors.white,
+                    ),
+                    textStyle: WidgetStateTextStyle.resolveWith(
+                      (states) => TextStyle(color: Colors.white),
+                    )))),
         home: const Splash_Screen(),
       ),
     );

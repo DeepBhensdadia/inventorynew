@@ -19,7 +19,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
   LocatioController locationcontroll = Get.put(LocatioController());
   void checkInternet() async {
     // context.loaderOverlay.show();
-    if (await InternetConnectionChecker().hasConnection) {
+    if (await InternetConnectionChecker.instance.hasConnection) {
       Future.delayed(const Duration(seconds: 0), () async {
         if (SharedPref.get(prefKey: PrefKey.loginDetails) != null) {
           if (SharedPref.get(prefKey: PrefKey.companyDetails) != null) {
